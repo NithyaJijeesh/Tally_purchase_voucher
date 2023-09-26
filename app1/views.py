@@ -2485,8 +2485,8 @@ def list_of_groups(request):
         else:
             return redirect('/')
         tally = Companies.objects.filter(id=t_id)
-        grup=tally_group.objects.filter(status=0)
-        grup1=tally_group.objects.filter(company_id=t_id)
+        grup=tally_group.objects.filter(status=0,company_id=t_id)
+        grup1=tally_group.objects.filter(company_id=t_id,status='null')
 
         context={'grup':grup,'tally':tally,'grup1':grup1}
         return render(request,'list_of_groups.html',context)
@@ -18587,7 +18587,7 @@ def purchase_vouchers(request):
      
         vouch = Voucher.objects.filter(voucher_type = 'Purchase',company = comp).get(voucher_name = name)
         st_item = stock_itemcreation.objects.filter(company = comp)
-        ledg_grp_all = tally_ledger.objects.filter(company = comp)
+        ledg_grp_all = tally_ledger.objects.filter(company = comp).exclude(under__in = ['Current Assets','Deposits-Asset','Fixed Assets','Loans & Advances-Asset','Misc. Expenses-Asset'])
         ledg_grp = tally_ledger.objects.filter(company = comp,under__in = ['Purchase Accounts'])
         # ledg_grp = tally_ledger.objects.filter(company = comp )
 
@@ -18616,8 +18616,31 @@ def create_purchase_voucher(request):
         else:
             return redirect('/')
 
-        comp = Companies.objects.get(id = t_id)
+    comp = Companies.objects.get(id = t_id)
 
     return redirect('/list_purchase_voucher')
+
+
+def getaccdetails(request):
+    
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+
+        comp = Companies.objects.get(id = t_id)
+
+        account_id = request.POST.get("id")
+        tally_ledg = tally_ledger.objects.get(id = account_id,company = comp)
+        led_name = tally_ledg.name
+        adds = tally_ledg.address
+        state = tally_ledg.state
+        country = tally_ledg.country
+        gst_type = tally_ledg.registration_type
+        gst_num = tally_ledg.gst_uin
+        print(gst_num)
+        return JsonResponse({"status": "not", 'ledger_name': led_name, 'address' : adds, 'state' : state, 'country': country,'gst_type':gst_type, 'gst_num': gst_num})
+    return redirect('/')
 
 #------- End of Purchase Vouchers----

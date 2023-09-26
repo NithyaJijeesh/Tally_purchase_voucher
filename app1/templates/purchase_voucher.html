@@ -59,8 +59,9 @@
         background-color:#5bc9e4;
         color: rgb(15, 14, 14);
     }
-    .bt{
-        text-align: end;
+    
+    .bg-none {
+        background-color: transparent !important;
     }
     .ScrollStyle{
         overflow-y: scroll;
@@ -112,6 +113,15 @@
         text-align: left;
         
     }
+    /* .bt{
+        height: 25px; 
+        width: 25px;
+        /* padding: 0px; 
+        border:none;
+        color: rgb(0, 0, 0);
+        margin-top: 11px;
+        text-align: center;
+    } */
     .butn{
         
         height: 15px; 
@@ -121,8 +131,6 @@
         color: rgb(0, 0, 0);
         margin-top: 11px;
         text-align: center;
-        
-    
     }
     .modal-content{
         position: relative;
@@ -132,6 +140,7 @@
         border-radius: 10px;
         margin-top: 50px;
         margin-left: 30px;
+        /* overflow-y: scroll; */
     }
     .btn{
         color: azure;
@@ -139,7 +148,10 @@
         width: 200px;
         justify-content: center;
     }
-  
+    /* .modal{
+        overflow-y: scroll;
+    }
+   */
         
 </style>
 <div class="container-fluid" >
@@ -202,7 +214,9 @@
                                 <select id="partyacc"  name="partyacc"  class=" acc rows partyacc m-0 p-0" style="width: 150px; border-radius: 5px;" onchange="showPartybalance()">
                                         <option class="opt" id = "opt" >&nbsp;&nbsp;Select Account </option> 
                                     {% for i in ledg_all %}
-                                        <option class="opt" id = "opt" name ='opt' value="{{i.id}} {{i.name}} {{i.under}}" 
+                                        <option class="opt" id = "opt" name ='opt' value="{{i.id}}" 
+                                            data-name = "{{i.name}}"
+                                            data-under = "{{i.under}}"
                                             data-balance="{{ i.current_blnc }}"
                                             data-balance-type="{{ i.current_blnc_type }}">
                                             &nbsp;&nbsp;{{i.name}}
@@ -211,24 +225,22 @@
 
                                 </select> 
                             </span>
-                            <span class="input-group party_curbalance "> <!--change to d-none-->
-                            <label>&nbsp;&nbsp;Current Balance &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</label>
-                            <!-- <label id ='curbalance'></label> -->
-                            <input type="number" class = 'txt m-0 p-0' style="width: 150px; border-radius: 5px;" id= 'party_curblnc' name = 'party_curblnc'>&nbsp;
-                            <input type="text" class = 'txt m-0 p-0' style="width: 50px; border-radius: 5px;" id= 'party_curblnct' name = 'party_curblnct'> 
-
+                            <span class="input-group party_curbalance d-none"> <!--change to d-none-->
+                                <label>&nbsp;&nbsp;Current Balance &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</label>
+                                <input type="number" class = 'txt m-0 p-0' style="width: 150px; border-radius: 5px;" id= 'party_curblnc' name = 'party_curblnc'>&nbsp;
+                                <input type="text" class = 'txt m-0 p-0' style="width: 50px; border-radius: 5px;" id= 'party_curblnct' name = 'party_curblnct'> 
                             </span>
                         </div>
 
                         <div  class= "purch_account" style="color: #000;font-weight:500 ;text-transform:capitalize; font-size: 18px;">
                             <span class = 'input-group'>
                                 <label style=" font-weight: 550;">&nbsp;&nbsp;Purchase Ledger&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</label>
-
-                                
                                 <select id="purchacc"  name="purchacc"  class=" acc rows purchacc m-0 p-0" style="width: 150px; border-radius: 5px;" onchange="showPurchbalance()">
                                         <option class="opt" id = "opt" >&nbsp;&nbsp;Select Account </option> 
                                     {% for i in ledg %}
-                                        <option class="opt" id = "opt" name ='opt' value="{{i.id}} {{i.name}} {{i.under}}" 
+                                        <option class="opt" id = "opt" name ='opt' value="{{i.id}}" 
+                                            data-name = "{{i.name}}"
+                                            data-under = "{{i.under}}"
                                             data-bal="{{ i.current_blnc }}"
                                             data-bal-type="{{ i.current_blnc_type }}">
                                             &nbsp;&nbsp;{{i.name}}
@@ -237,12 +249,10 @@
 
                                 </select> 
                             </span>
-                            <span class="input-group purch_curbalance "><!--change to d-none-->
-                            <label>&nbsp;&nbsp;Current Balance &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</label>
-                            <!-- <label id ='curbalance'></label> -->
-                            <input type="number" class = 'txt m-0 p-0' style="width: 150px; border-radius: 5px;" id= 'purch_curblnc' name = 'purch_curblnc'>&nbsp;
-                            <input type="text" class = 'txt m-0 p-0' style="width: 50px; border-radius: 5px;" id= 'purch_curblnct' name = 'purch_curblnct'> 
-
+                            <span class="input-group purch_curbalance d-none"><!--change to d-none-->
+                                <label>&nbsp;&nbsp;Current Balance &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</label>
+                                <input type="number" class = 'txt m-0 p-0' style="width: 150px; border-radius: 5px;" id= 'purch_curblnc' name = 'purch_curblnc'>&nbsp;
+                                <input type="text" class = 'txt m-0 p-0' style="width: 50px; border-radius: 5px;" id= 'purch_curblnct' name = 'purch_curblnct'> 
                             </span>
                         </div>
                 
@@ -259,25 +269,31 @@
 
                     <tbody style="border-color: rgb(112, 111, 111); " class = 'part'>
                         <div>
-                        <tr>
-                            <th colspan="16" class="text-dark" style="border: none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name of Item</th>
-                            <th colspan="1" class=" text-right text-dark" style="border: none;" >Quantity&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                            <tr>
+                                <th colspan="16" class="text-dark" style="border: none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name of Item</th>
+                                <th colspan="1" class=" text-right text-dark" style="border: none;" >Quantity&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 
-                            <th colspan="1" class="text-right text-dark" style="border: none;" >Rate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                            <th colspan="1" class="text-right text-dark" style="border: none;" >per&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                <th colspan="1" class="text-right text-dark" style="border: none;" >Rate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                <th colspan="1" class="text-right text-dark" style="border: none;" >per&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 
 
-                            <th colspan="1" class="text-right text-dark" style=" font: weight 8px;size: 15px; border: none;">Amount&nbsp;</th>
-                        </tr></div>
+                                <th colspan="1" class="text-right text-dark" style=" font: weight 8px;size: 15px; border: none;">Amount&nbsp;</th>
+                            </tr>
+                        </div>
 
                             <tr style="border: none;">
                              
                                 <td colspan="16" style="border: none;" class="mt-4">
 
-                                        <select id="item1"  name="opt[]" class=" txt rows item mb-2 p-0" style="width: 150px; border-radius: 5px;">
+                                        <select id="item1"  name="opt[]" class="txt rows item mb-2 p-0" style="width: 150px; border-radius: 5px;" onchange="showGodown()">
                                             <option class="opt" id = "opt" >&nbsp;&nbsp;Select Item </option> 
                                             {% for i in item %}
-                                            <option class="opt" id = "opt" value="{{i.id}}" >&nbsp;&nbsp;{{i.name}}</option> 
+                                            <option class="opt" id = "opt" value="{{i.id}}" 
+                                            data-name="{{i.name}}"
+                                            data-rate="{{i.rate}}"
+                                            data-qty="{{i.quantity}}"
+                                            data-per="{{i.per}}">
+                                            &nbsp;&nbsp;{{i.name}}</option> 
                                             {% endfor %}
 
                                         </select> 
@@ -332,94 +348,340 @@
 
     <!-- Modal receipt details -->
 
-  <div class="modal fade" id="rec_det">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content" style="background-color: #213b52; color:azure;">
-                <div class="modal-header">
-                    <div class="row container m-0 p-2">
-                        <div class="col-10 text-center">
-                            <h3><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Receipt Deatils</strong></h3>
+    <div class="modal fade " id="rec_det">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" style="background-color: #213b52; color:azure; height: auto;">
+                    <div class="modal-header">
+                        <div class="row container m-0 p-2">
+                            <div class="col-10 text-center">
+                                <h3><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Receipt Deatils</strong></h3>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="close align-items-end" data-dismiss="modal" >&times;</button>
+                            </div>
+                            
                         </div>
-                        <div class="col">
-                            <button type="button" class="close align-items-end" data-dismiss="modal" >&times;</button>
-                        </div>
-                        
                     </div>
-                </div>
-                
-                <div class="modal-body">
-                    <form class=" 100vw" id ='modalForm' action="" method='post' >
+                    
+                    <div class="modal-body">
+                        <form class=" 100vw" id ='modalForm' action="" method='post' >
 
-                        {% csrf_token %}
-                            <div class="row container m-0 p-2">
-                                <div class="col-5 ">
-                                    <label class="font-weight-bold">Receipt Note No(s) : </label><br>
-                                    <!-- <span class="input-group">
-                                        <input type="number" style="width: 25%;" class="mx-3" id="rec_no1" name = recno[]>
-                                        <label> Date: &nbsp; </label>
-                                        <input type="date" id="rec_date1" name = recdate[]> &nbsp;
-                                        <button class="butn bi bi-plus-square-fill mt-2"></button>
-                                    </span> -->
+                            {% csrf_token %}
+                            <div class="row container mt-3 p-2">
+                                <div class="col-6 ">
                                     <div class="row">
-                                        <div class="col">
-                                            <input type="number" style="width: 50%;" class="mx-3" name="recno[]">
-                                        </div>
-                                        <div class="row">
-                                            <div class="col input-group">
-                                                <label> Date: &nbsp; </label>
-                                                <input type="date" name="recdate[]" >
-                                                &nbsp;
-                                                <button class="butn fa fa-plus-square bg-dark mt-4 p-0" onclick="addRow()"></button>
+                                        <label class="font-weight-bold">Receipt Note No(s) : </label><br>
+                                    </div>
+                                    <div id="container">
+                                        <div class="row row-recdet">
+                                            <div class="col-5">
+                                                <input type="number" style="width: 50%;" name="recno[]">
+                                            </div>
+                                            <div class="col-7">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label> Date:</label>
+                                                        <input type="date" name="recdate[]" >
+                                                        &nbsp;
+                                                        
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                
-                                
+                                    <div class="row">
+                                        <button type="button" class="bt fa fa-plus-square bg-dark text-light  mt-2 p-0" 
+                                                style="font-size: large; border-radius: 5px;"  title="Add Row" onclick="addRow()"> </button>
+                                    </div>
                                 </div>
-                                <div class="col-5">
-                                    <h4 class="text-align-end font-weight-bold">Amount</h4>
-                                    
-                                    <label class="font-weight-bold">Receipt Note No(s) : </label>
+
+                                <div class="col-6">
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Receipt Doc No : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="number"  name="recdocno">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Dispatched Through : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="dispch">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        
+                                        
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Destination : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="destn">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Carrier Name/Agent : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="carrier">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Bill of Lading/LR-RR No : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="carrier">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Date : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="date" style="width: 95%;" name="lad_date">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Motor Vehicle No : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="veh_num">
+                                        </div>
+                                    </div>
                                 </div>
-                                
                             </div>
-                            <!-- <hr>
-                            <div class="row container m-0 p-2">
-                                <div class="col-7">
-                                    <label id = 't_type' name = 't_type' class="font-italic"></label> 
-                                </div>
-                                <div class="col-3">
-                                    <label id = 'amount' name = "amount"></label>
-                                
-                                </div>
-                                
-                            </div>
-                            <hr>
-                            <div class="row container m-0 p-4">
-                                <div class="col-5 form-group">
-                                    <label>Inst No.</label>
-                                    <input type="text" class="form-control" id = 'instnum' name = 'instnum' style="width: 250px;height: 25px;">
-                                    
-                                </div>
-                        
-                                <div class="col-5 form-group">
-                                    <label>Inst Date</label>
-                                    <input type="date" id = 'instdate' class="form-control" name = 'instdate' style="width: 250px;height: 25px;">
-                                    
-                                </div>
-                                 
-                            </div>-->
-            
-                            <button type="submit" class="btn btn-block text-uppercase text-shadow" data-dismiss="modal" style="margin-left: 300px;" id = 'modalSave'>SAVE</button>
- 
-                     </form>
+                        </form>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="submit" class="btn btn-block text-uppercase text-shadow "
+                            data-dismiss="modal" data-target="#party_det" data-toggle="modal" id="saveReceipt">
+                            SAVE
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
+        <!-- End of Receipt Details Modal -->
 
-         
+        <!-- Party Details Modal -->
+
+        <div class="modal fade " id="party_det">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" style="background-color: #213b52; color:azure;">
+                    <div class="modal-header">
+                        <div class="row container m-0 p-1">
+                            <div class="col-10 text-center">
+                                <h3><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Party Deatils</strong></h3>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="close align-items-end" data-dismiss="modal" >&times;</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <form  id ='modalForm' action="" method='post' >
+                            {% csrf_token %}
+                            <div class="row container px-5 py-1">
+                                <div class="col-2"></div>
+                                <div class="col-10">
+                                    <div class="row mt-1" >
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Supplier(Bill from) : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" name="supplier" id="supplier">
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Mailing Name : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="mail_name" id="mail_name">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Address : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <textarea name="party_add" id="party_add"  cols="18%" rows="5"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">State : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="party_state" id="party_state">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Country : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="party_country" id="party_country">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">GST Registration Type : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <select id="gst_type"  name="gst_type" style="width: 60%;"  class="gst_typec m-0 p-0" onchange="showGST()">
+                                            <option value="Unknown">Unknown</option> 
+                                            <option value="Composition">Composition</option> 
+                                            <option value="Consumer">Consumer</option> 
+                                            <option value="Regular">Regular</option> 
+                                            <option  value="Unregistered">Unregistered</option> 
+                                        </select> 
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-1 d-none" id="gst_num_row">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">GSTIN/UIN : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" name="gst_num" id="gst_num">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="col-4"></div> -->
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer justify-content-center p-1">
+                        <button type="submit" class="btn btn-block text-uppercase text-shadow "
+                            data-dismiss="modal" id="saveParty" >
+                            SAVE
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <!-- End of Party Details Modal -->
+
+         <!-- Godown Modal -->
+
+        <div class="modal fade " id="godown">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" style="background-color: #213b52; color:azure;">
+                    <div class="modal-header">
+                        <div class="row container m-0 p-1">
+                            <div class="col-10 text-center">
+                                <h3>
+                                    <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item Allocation for&nbsp; : </strong>&nbsp;&nbsp;&nbsp;
+                                    <em><span  id="item_name"></span></em>
+                                </h3>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="close align-items-end" data-dismiss="modal" >&times;</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <form  id ='modalForm' action="" method='post' >
+                            {% csrf_token %}
+                            <div class="row container px-5 py-1">
+                                <div class="col-2"></div>
+                                <div class="col-10">
+                                    <div class="row mt-1" >
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Supplier(Bill from) : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" name="supplier" id="supplier">
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Mailing Name : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="mail_name" id="mail_name">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Address : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <textarea name="party_add" id="party_add"  cols="18%" rows="5"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">State : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="party_state" id="party_state">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Country : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="party_country" id="party_country">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">GST Registration Type : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <select id="gst_type"  name="gst_type" style="width: 60%;"  class="gst_typec m-0 p-0" onchange="showGST()">
+                                            <option value="Unknown">Unknown</option> 
+                                            <option value="Composition">Composition</option> 
+                                            <option value="Consumer">Consumer</option> 
+                                            <option value="Regular">Regular</option> 
+                                            <option  value="Unregistered">Unregistered</option> 
+                                        </select> 
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-1 d-none" id="gst_num_row">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">GSTIN/UIN : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" name="gst_num" id="gst_num">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer justify-content-center p-1">
+                        <button type="submit" class="btn btn-block text-uppercase text-shadow "
+                            data-dismiss="modal" id="saveParty" >
+                            SAVE
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Godwn Modal -->
     </div>
 </div>
 
@@ -436,31 +698,135 @@
 
     function showPartybalance(){
         
-        
+        $(".party_curbalance").addClass('d-flex');
         var selectedOption = $("#partyacc option:selected");
         
         var blnc = selectedOption.data("balance");
         var blnct = selectedOption.data("balance-type");
-        
-        
-        $("#party_curblnc").val(blnc);
-        $("#party_curblnct").val(blnct);
 
+        if (blnct == 'Cr'){
+            $("#party_curblnc").val(blnc);
+            $("#party_curblnct").val(blnct);
+
+            $("#party_curblnc").css("color", "red");
+            $("#party_curblnct").css("color", "red");
+        }
+        else{
+            $("#party_curblnc").val(blnc);
+            $("#party_curblnct").val(blnct);
+
+            $("#party_curblnc").css("color", "");
+            $("#party_curblnct").css("color", ""); 
+        }
+       
         if (selectedOption) {
             $('#rec_det').modal('show');
         }
     
     }
     function showPurchbalance(){
+        $(".purch_curbalance").addClass('d-flex');
+
         var selectedOption = $("#purchacc option:selected");
         
         var blnc1 = selectedOption.data("bal");
         var blnct1 = selectedOption.data("bal-type");
         
-        
-        $("#purch_curblnc").val(blnc1);
-        $("#purch_curblnct").val(blnct1);
+        if(blnct1 =='Cr'){
+            $("#purch_curblnc").val(blnc1);
+            $("#purch_curblnct").val(blnct1);
     
+            $("#purch_curblnc").css("color", "red");
+            $("#purch_curblnct").css("color", "red");
+        }
+        else{
+            $("#purch_curblnc").val(blnc1);
+            $("#purch_curblnct").val(blnct1);
+
+            $("#purch_curblnc").css("color", "");
+            $("#purch_curblnct").css("color", ""); 
+        }
+       
+    }
+    function showGST() {
+        var gstType = document.getElementById("gst_type").value;
+        var gstNumRow = document.getElementById("gst_num_row");
+
+        if (gstType === "Consumer" || gstType === "Unregistered") {
+            gstNumRow.classList.add("d-none");
+            
+        } else {
+            gstNumRow.classList.remove("d-none");
+        }
+    }
+
+
+    $(document).on("click","#saveReceipt",function() {
+
+        const ledg = $("#partyacc").val();
+        // console.log(ledg)
+        $.ajax({
+            url : '{% url "getaccdetails" %}',
+            type: 'POST',
+            data :  {
+                        'id' : ledg,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+            success : function(data){
+                // console.log('Data is :', data)
+                $("#supplier").val(data.ledger_name);
+                $("#mail_name").val(data.ledger_name);
+                $("#party_add").val(data.address);
+                $("#party_state").val(data.state);
+                $("#party_country").val(data.country);
+                $("#gst_type").val(data.gst_type);
+                
+
+                var gstType = $("#gst_type").val();
+                var gstNumRow = document.getElementById("gst_num_row");
+
+                if (gstType === "Consumer" || gstType === "Unregistered") {
+                    gstNumRow.classList.add("d-none");
+                    
+                } else {
+                    gstNumRow.classList.remove("d-none");
+                    $("#gst_num").val(data.gst_num);
+                }
+            }
+        })
+
+    });
+
+
+    function addRow() {
+        var newRow = document.querySelector('.row-recdet').cloneNode(true);
+
+        var inputElements = newRow.querySelectorAll('input');
+        for (var i = 0; i < inputElements.length; i++) {
+            inputElements[i].value = '';
+        }
+
+        document.querySelector('.row-recdet').parentNode.appendChild(newRow);
+        var container = document.getElementById('container');
+        container.insertBefore(newRowRecdet, container.lastChild);
+    }
+
+    function showGodown(){
+
+        var rowLength = $(".item").length;
+        var selectedOption = $("#item" + rowLength + " option:selected");
+        
+
+        var blnc1 = selectedOption.data("name");
+        var blnct1 = selectedOption.data("bal-type");
+        console.log(blnc1)
+        
+        
+        $("#item_name").text(blnc1);
+
+        if (selectedOption) {
+            $('#godown').modal('show');
+        }
     }
 
  </script>
