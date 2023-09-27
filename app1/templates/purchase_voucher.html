@@ -93,7 +93,13 @@
         
     } 
 
-    
+    .opt1 {
+        color: #000;
+        text-align:top;
+        padding: 0px;
+        background-color: rgb(245, 240, 230);
+        border-radius: 0;
+    } 
     .acc {
         color: #000;
         text-align:top;
@@ -111,17 +117,17 @@
         background-color: rgb(255, 229, 183);
         color: #000;
         text-align: left;
-        
+        border-radius: 5px;
     }
-    /* .bt{
+    .txt1{
         height: 25px; 
-        width: 25px;
-        /* padding: 0px; 
-        border:none;
-        color: rgb(0, 0, 0);
-        margin-top: 11px;
-        text-align: center;
-    } */
+        width: 170px;
+        padding: 0;
+        background-color: rgb(245, 240, 230);
+        color: #000;
+        text-align: left;
+        border-radius: 5px;
+    }
     .butn{
         
         height: 15px; 
@@ -374,14 +380,14 @@
                                     </div>
                                     <div id="container">
                                         <div class="row row-recdet">
-                                            <div class="col-5">
-                                                <input type="number" style="width: 50%;" name="recno[]">
+                                            <div class="col-4">
+                                                <input type="number" style="width: 50%;" name="recno[]" class="txt1 p-1">
                                             </div>
-                                            <div class="col-7">
+                                            <div class="col-8">
                                                 <div class="row">
                                                     <div class="col">
                                                         <label> Date:</label>
-                                                        <input type="date" name="recdate[]" >
+                                                        <input type="date" name="recdate[]" class="txt1 p-1">
                                                         &nbsp;
                                                         
                                                     </div>
@@ -401,7 +407,7 @@
                                             <label class="font-weight-bold">Receipt Doc No : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="number"  name="recdocno">
+                                            <input type="number"  name="recdocno" class="txt1 p-1">
                                         </div>
                                     </div>
                                     <div class="row mt-1">
@@ -409,7 +415,7 @@
                                             <label class="font-weight-bold">Dispatched Through : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="text"  name="dispch">
+                                            <input type="text"  name="dispch" class="txt1 p-1">
                                         </div>
                                     </div>
                                     <div class="row mt-1">
@@ -419,7 +425,7 @@
                                             <label class="font-weight-bold">Destination : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="text"  name="destn">
+                                            <input type="text"  name="destn" class="txt1 p-1">
                                         </div>
                                     </div>
                                     <div class="row mt-1">
@@ -427,7 +433,7 @@
                                             <label class="font-weight-bold">Carrier Name/Agent : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="text"  name="carrier">
+                                            <input type="text"  name="carrier" class="txt1 p-1">
                                         </div>
                                     </div>
 
@@ -436,7 +442,7 @@
                                             <label class="font-weight-bold">Bill of Lading/LR-RR No : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="text"  name="carrier">
+                                            <input type="text"  name="carrier" class="txt1 p-1">
                                         </div>
                                     </div>
 
@@ -445,7 +451,7 @@
                                             <label class="font-weight-bold">Date : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="date" style="width: 95%;" name="lad_date">
+                                            <input type="date"  name="lad_date" class="txt1 p-1">
                                         </div>
                                     </div>
 
@@ -454,7 +460,7 @@
                                             <label class="font-weight-bold">Motor Vehicle No : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="text"  name="veh_num">
+                                            <input type="text"  name="veh_num" class="txt1 p-1">
                                         </div>
                                     </div>
                                 </div>
@@ -501,7 +507,7 @@
                                             <label class="font-weight-bold">Supplier(Bill from) : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="text" name="supplier" id="supplier">
+                                            <input type="text" name="supplier" id="supplier" class="txt1 p-1">
                                         </div>
                                         
                                     </div>
@@ -510,7 +516,7 @@
                                             <label class="font-weight-bold">Mailing Name : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="text"  name="mail_name" id="mail_name">
+                                            <input type="text"  name="mail_name" id="mail_name" class="txt1 p-1">
                                         </div>
                                     </div>
                                     <div class="row mt-1">
@@ -518,7 +524,7 @@
                                             <label class="font-weight-bold">Address : </label>
                                         </div>
                                         <div class="col-6">
-                                            <textarea name="party_add" id="party_add"  cols="18%" rows="5"></textarea>
+                                            <textarea name="party_add" id="party_add"  cols="18" rows="5" class="txt1 p-1" style="height: auto;"></textarea>
                                         </div>
                                     </div>
                                     <div class="row mt-1">
@@ -526,7 +532,7 @@
                                             <label class="font-weight-bold">State : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="text"  name="party_state" id="party_state">
+                                            <input type="text"  name="party_state" id="party_state" class="txt1 p-1">
                                         </div>
                                     </div>
                                     <div class="row mt-1">
@@ -534,7 +540,7 @@
                                             <label class="font-weight-bold">Country : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="text"  name="party_country" id="party_country">
+                                            <input type="text"  name="party_country" id="party_country" class="txt1 p-1">
                                         </div>
                                     </div>
 
@@ -543,12 +549,12 @@
                                             <label class="font-weight-bold">GST Registration Type : </label>
                                         </div>
                                         <div class="col-6">
-                                            <select id="gst_type"  name="gst_type" style="width: 60%;"  class="gst_typec m-0 p-0" onchange="showGST()">
-                                            <option value="Unknown">Unknown</option> 
-                                            <option value="Composition">Composition</option> 
-                                            <option value="Consumer">Consumer</option> 
-                                            <option value="Regular">Regular</option> 
-                                            <option  value="Unregistered">Unregistered</option> 
+                                            <select id="gst_type"  name="gst_type"  class="gst_typec m-0 py-0 px-1 txt1 " onchange="showGST()">
+                                            <option class="opt1" value="Unknown">Unknown</option> 
+                                            <option class="opt1" value="Composition">Composition</option> 
+                                            <option class="opt1" value="Consumer">Consumer</option> 
+                                            <option class="opt1" value="Regular">Regular</option> 
+                                            <option class="opt1" value="Unregistered">Unregistered</option> 
                                         </select> 
                                         </div>
                                     </div>
@@ -558,7 +564,7 @@
                                             <label class="font-weight-bold">GSTIN/UIN : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="text" name="gst_num" id="gst_num">
+                                            <input type="text" name="gst_num" id="gst_num" class="txt1 p-1">
                                         </div>
                                     </div>
                                 </div>
@@ -585,10 +591,10 @@
                     <div class="modal-header">
                         <div class="row container m-0 p-1">
                             <div class="col-10 text-center">
-                                <h3>
+                                <h5>
                                     <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item Allocation for&nbsp; : </strong>&nbsp;&nbsp;&nbsp;
                                     <em><span  id="item_name"></span></em>
-                                </h3>
+                                </h5>
                             </div>
                             <div class="col">
                                 <button type="button" class="close align-items-end" data-dismiss="modal" >&times;</button>
@@ -597,78 +603,69 @@
                         </div>
                     </div>
                     
-                    <div class="modal-body">
+                    <div class="modal-body" style="width: auto;">
                         <form  id ='modalForm' action="" method='post' >
                             {% csrf_token %}
-                            <div class="row container px-5 py-1">
-                                <div class="col-2"></div>
-                                <div class="col-10">
-                                    <div class="row mt-1" >
-                                        <div class="col-6">
-                                            <label class="font-weight-bold">Supplier(Bill from) : </label>
-                                        </div>
-                                        <div class="col-6">
-                                            <input type="text" name="supplier" id="supplier">
-                                        </div>
+                            <div class="row container px-5 py-0">
+                                <table class="table border-dark table-sm mb-5 row_sec">
+                                    <tbody >
+                                        <tr>
+                                            <th class="text-center">Godown</th>
+                                            <th class="text-center">Quantity</th>
+                                            <th class="text-center">Rate</th>
+                                            <th class="text-center">per</th>
+                                            <th class="text-center">Amount </th>
+                                        </tr>
+                  
+                                        <tr>
+                                            <td  class="mt-4 border-dark">
+            
+                                                    <select id="gd1"  name="gd[]" class=" rows gdn py-0 px-1 txt1" style="width: 150px;">
+                                                        <option class="opt1" id = "opt" >&nbsp;&nbsp;Select Godown </option> 
+                                                        {% for i in godown %}
+                                                            <option class="opt1" id = "opt" value="{{i.id}}" data-name="{{i.name}}">&nbsp;&nbsp;{{i.name}}</option> 
+                                                        {% endfor %}
+            
+                                                    </select> 
+                                                    
+                                            </td>
+                                            <td  class="m-0"  >
+                                                <input type="number" class="txt1 gdqty p-1" id= 'gdqty1' name = 'gdqty[]'  style="width: 100px;">
+                                                
+                                            </td>
+                                            <td  class="m-0"  >
+                                                <input type="number"  class="txt1 gdrate p-1" id= 'gdrate1' name = 'gdrate[]' style="width: 100px;" >
+                                                
+                                            </td>
+                                            <td   class="m-0" >
+                                                <input type="text" class="txt1 gdper p-1" id= 'gdper1' name = 'gdper[]' style="width: 100px;">
+                                                
+                                            </td>
+            
+                                            <td class="m-0" >
+                                                <input type="number" class="txt1  gdamnt p-1" id= 'gdamnt1' name = 'gdamnt[]' style="width: 150px;">
+                                            </td>
+                                            <button type="button" class="butn mt-0 bi bi-plus-square-fill" id = 'gdbutn1'  onclick="rowGodown()"></button>
+                                        </tr>
                                         
-                                    </div>
-                                    <div class="row mt-1">
-                                        <div class="col-6">
-                                            <label class="font-weight-bold">Mailing Name : </label>
-                                        </div>
-                                        <div class="col-6">
-                                            <input type="text"  name="mail_name" id="mail_name">
-                                        </div>
-                                    </div>
-                                    <div class="row mt-1">
-                                        <div class="col-6">
-                                            <label class="font-weight-bold">Address : </label>
-                                        </div>
-                                        <div class="col-6">
-                                            <textarea name="party_add" id="party_add"  cols="18%" rows="5"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-1">
-                                        <div class="col-6">
-                                            <label class="font-weight-bold">State : </label>
-                                        </div>
-                                        <div class="col-6">
-                                            <input type="text"  name="party_state" id="party_state">
-                                        </div>
-                                    </div>
-                                    <div class="row mt-1">
-                                        <div class="col-6">
-                                            <label class="font-weight-bold">Country : </label>
-                                        </div>
-                                        <div class="col-6">
-                                            <input type="text"  name="party_country" id="party_country">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mt-1">
-                                        <div class="col-6">
-                                            <label class="font-weight-bold">GST Registration Type : </label>
-                                        </div>
-                                        <div class="col-6">
-                                            <select id="gst_type"  name="gst_type" style="width: 60%;"  class="gst_typec m-0 p-0" onchange="showGST()">
-                                            <option value="Unknown">Unknown</option> 
-                                            <option value="Composition">Composition</option> 
-                                            <option value="Consumer">Consumer</option> 
-                                            <option value="Regular">Regular</option> 
-                                            <option  value="Unregistered">Unregistered</option> 
-                                        </select> 
-                                        </div>
-                                    </div>
-
-                                    <div class="row mt-1 d-none" id="gst_num_row">
-                                        <div class="col-6">
-                                            <label class="font-weight-bold">GSTIN/UIN : </label>
-                                        </div>
-                                        <div class="col-6">
-                                            <input type="text" name="gst_num" id="gst_num">
-                                        </div>
-                                    </div>
-                                </div>
+   
+                                    </tbody>
+                                                                        
+                                </table> 
+                                <table class="table table-bordered table-sm mt-5 total_sec">
+                                    <tr>
+                                        <td><input type="number" class="txt1" style="width: 150px;"></td>
+                                        <td  class="mt-4 ">
+                                            <input type="number" class="txt1  gdamnt p-1" id= 'gdamnt1' name = 'gdamnt[]' style="width: 100px;">
+                                        </td>
+                                        <td><input type="number" class="txt1" style="width: 100px;"></td>
+                                        <td><input type="number" class="txt1" style="width: 100px;"></td>
+                                        <td class=" mt-0 m-0" >
+                                            <input type="number" class="txt1  gdamnt p-1" id= 'gdamnt1' name = 'gdamnt[]' style="width: 150px;">
+                                        </td>
+                                    </tr>
+                                </table>
+                                
                             </div>
                         </form>
                     </div>

@@ -18590,6 +18590,7 @@ def purchase_vouchers(request):
         ledg_grp_all = tally_ledger.objects.filter(company = comp).exclude(under__in = ['Current Assets','Deposits-Asset','Fixed Assets','Loans & Advances-Asset','Misc. Expenses-Asset'])
         ledg_grp = tally_ledger.objects.filter(company = comp,under__in = ['Purchase Accounts'])
         # ledg_grp = tally_ledger.objects.filter(company = comp )
+        godown = CreateGodown.objects.filter(comp = comp)
 
      
         v  = 1 if purchase_voucher.objects.filter(company = comp).values('pur_id').last() is None else purchase_voucher.objects.filter(company = comp).values('pid').last()['pid']+1
@@ -18605,6 +18606,7 @@ def purchase_vouchers(request):
                     'v' : v,
                     'tally':tally,
                     'item': st_item,
+                    'godown' : godown,
                 }
         return render(request,'purchase_voucher.html',context)
 
