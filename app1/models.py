@@ -2035,8 +2035,28 @@ class purchase_voucher(models.Model):
 
     pur_id = models.IntegerField(null=True)
     sup_inv_no = models.CharField(max_length= 255, null=True)
+    sup_inv_date = models.DateField(blank = True, null= True)
     vouch_date = models.DateField(blank = True, null= True)
-    particulars = models.CharField(max_length=255,null= True)
+    party_accname = models.CharField(max_length=255,null= True)
+    purchase_ledger = models.CharField(max_length=255,null= True)
+
+    receipt_doc_no = models.CharField(max_length=255,null= True)
+    dispatched_through = models.CharField(max_length=255,null= True)
+    destination = models.CharField(max_length=255,null= True)
+    carriername_agent = models.CharField(max_length=255,null= True)
+    bill_of_lading  = models.CharField(max_length=255,null= True)
+    receipt_date = models.DateField(blank = True, null= True)
+    motor_vehicle_no = models.CharField(max_length=255,null= True)
+
+    supplier = models.CharField(max_length=255,null= True)
+    mailing_name = models.CharField(max_length=255,null= True)
+    address =  models.CharField(max_length=255,null= True)
+    state = models.CharField(max_length=255,null= True)
+    country = models.CharField(max_length=255,null= True)
+    gst_treatment = models.CharField(max_length=255,null= True)
+    gst_number = models.CharField(max_length=255,null= True)
+
+    quantity = models.IntegerField(null= True)
     amount = models.IntegerField(null= True)
     narration = models.CharField(max_length=255)
 
@@ -2044,10 +2064,12 @@ class purchase_voucher(models.Model):
 class purchase_particulars(models.Model):
     purchase_voucher = models.ForeignKey(purchase_voucher,on_delete=models.CASCADE,null=True,blank=True)
     company = models.ForeignKey(Companies,on_delete=models.CASCADE,null=True,blank=True)
-    particular_id = models.IntegerField(null= True)
-    particular = models.CharField(max_length = 100,null=True,blank=True)
-    credit_amount =  models.IntegerField(null= True)
-    debit_amount = models.IntegerField(null= True)
+    item_id = models.IntegerField(null= True)
+    item = models.CharField(max_length = 100,null=True,blank=True)
+    quantity =  models.IntegerField(null= True)
+    rate = models.IntegerField(null= True)
+    per = models.CharField(max_length = 100,null=True,blank=True)
+    amount = models.IntegerField(null= True)
 
 class receipt_note_no(models.Model):
     purchase = models.ForeignKey(purchase_voucher,on_delete=models.CASCADE,null=True,blank=True)

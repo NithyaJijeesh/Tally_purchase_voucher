@@ -18589,7 +18589,6 @@ def purchase_vouchers(request):
         st_item = stock_itemcreation.objects.filter(company = comp)
         ledg_grp_all = tally_ledger.objects.filter(company = comp).exclude(under__in = ['Current Assets','Deposits-Asset','Fixed Assets','Loans & Advances-Asset','Misc. Expenses-Asset'])
         ledg_grp = tally_ledger.objects.filter(company = comp,under__in = ['Purchase Accounts'])
-        # ledg_grp = tally_ledger.objects.filter(company = comp )
         godown = CreateGodown.objects.filter(comp = comp)
 
      

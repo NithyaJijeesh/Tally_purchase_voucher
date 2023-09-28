@@ -142,7 +142,7 @@
         position: relative;
         color:rgb(17, 54, 86) ;
         width: 800px;
-        height: 500px;
+        min-height: 500px;
         border-radius: 10px;
         margin-top: 50px;
         margin-left: 30px;
@@ -218,16 +218,16 @@
 
                                 
                                 <select id="partyacc"  name="partyacc"  class=" acc rows partyacc m-0 p-0" style="width: 150px; border-radius: 5px;" onchange="showPartybalance()">
-                                        <option class="opt" id = "opt" >&nbsp;&nbsp;Select Account </option> 
+                                    <option class="opt" id = "opt" >&nbsp;&nbsp;Select Account </option> 
                                     {% for i in ledg_all %}
-                                        <option class="opt" id = "opt" name ='opt' value="{{i.id}}" 
-                                            data-name = "{{i.name}}"
-                                            data-under = "{{i.under}}"
-                                            data-balance="{{ i.current_blnc }}"
-                                            data-balance-type="{{ i.current_blnc_type }}">
-                                            &nbsp;&nbsp;{{i.name}}
-                                        </option>
-                                    {% endfor %}
+                                    <option class="opt" id = "opt" name ='opt' value="{{i.id}}" 
+                                        data-name = "{{i.name}}"
+                                        data-under = "{{i.under}}"
+                                        data-balance="{{ i.current_blnc }}"
+                                        data-balance-type="{{ i.current_blnc_type }}">
+                                        &nbsp;&nbsp;{{i.name}}
+                                    </option>
+                                {% endfor %}
 
                                 </select> 
                             </span>
@@ -273,7 +273,7 @@
 
                 </tr>
 
-                    <tbody style="border-color: rgb(112, 111, 111); " class = 'part'>
+                    <tbody style="border-color: rgb(112, 111, 111); " class = 'part' id="myTable">
                         <div>
                             <tr>
                                 <th colspan="16" class="text-dark" style="border: none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name of Item</th>
@@ -287,42 +287,40 @@
                             </tr>
                         </div>
 
-                            <tr style="border: none;">
-                             
-                                <td colspan="16" style="border: none;" class="mt-4">
+                        <tr style="border: none;" id="itemRow">
+                            
+                            <td colspan="16" style="border: none;" class="mt-4">
 
-                                        <select id="item1"  name="opt[]" class="txt rows item mb-2 p-0" style="width: 150px; border-radius: 5px;" onchange="showGodown()">
-                                            <option class="opt" id = "opt" >&nbsp;&nbsp;Select Item </option> 
-                                            {% for i in item %}
-                                            <option class="opt" id = "opt" value="{{i.id}}" 
-                                            data-name="{{i.name}}"
-                                            data-rate="{{i.rate}}"
-                                            data-qty="{{i.quantity}}"
-                                            data-per="{{i.per}}">
-                                            &nbsp;&nbsp;{{i.name}}</option> 
-                                            {% endfor %}
+                                <select id="item1"  name="opt[]" class="txt rows item mb-2 p-0" style="width: 150px; border-radius: 5px;" onchange="showGodown()">
+                                    <option class="opt" id = "opt" >&nbsp;&nbsp;Select Item </option> 
+                                    {% for i in item %}
+                                    <option class="opt" id = "opt" value="{{i.id}}" 
+                                    data-name="{{i.name}}"
+                                    data-rate="{{i.rate}}"
+                                    data-qty="{{i.quantity}}"
+                                    data-per="{{i.per}}"
+                                    data-amount="{{i.value}}">
+                                    &nbsp;&nbsp;{{i.name}}</option> 
+                                    {% endfor %}
 
-                                        </select> 
-                                        
-                                </td>
-                                <td colspan="1" class=" text-right mt-0 m-0" style="border: none; ">
-                                    <input type="number" style="width: 100px; border-radius: 5px;" class = 'txt qty' id= 'qty1' name = 'qty[]'  >
+                                </select> 
                                     
-                                </td>
-                                <td colspan="1" class="text-right mt-0 m-0" style="border: none; ">
-                                    <input type="number" style="width: 100px; border-radius: 5px;" class = 'txt rate' id= 'rate1' name = 'rate[]'  >
-                                     
-                                </td>
-                                <td colspan="1" class="text-right mt-0 m-0" style="border: none; ">
-                                    <input type="text" style="width: 100px; border-radius: 5px;" class = 'txt per' id= 'per1' name = 'per[]' >
-                                     
-                                </td>
+                            </td>
+                            <td colspan="1" class=" text-right mt-0 m-0" style="border: none; ">
+                                <input type="number" style="width: 100px; border-radius: 5px;" class = 'txt qty' id= 'qty1' name = 'qty[]'  >
+                            </td>
+                            <td colspan="1" class="text-right mt-0 m-0" style="border: none; ">
+                                <input type="number" style="width: 100px; border-radius: 5px;" class = 'txt rate' id= 'rate1' name = 'rate[]'  >
+                            </td>
+                            <td colspan="1" class="text-right mt-0 m-0" style="border: none; ">
+                                <input type="text" style="width: 100px; border-radius: 5px;" class = 'txt per' id= 'per1' name = 'per[]' >
+                            </td>
 
-                                <td colspan="2" class="text-right mt-0 m-0" style="border: none; ">
-                                    <input type="number" style="width: 150px; border-radius: 5px;" class = 'txt amnt' id= 'amnt1' name = 'amnt[]' oninput='calculateTotal();' onchange='showTransaction();'>
-                                    <button type="button" class="butn mt-0 bi bi-plus-square-fill" id = 'butn1'  onclick="createRow()"></button>
-                                </td>
-                            </tr>
+                            <td colspan="2" class="text-right mt-0 m-0" style="border: none; ">
+                                <input type="number" style="width: 150px; border-radius: 5px;" class = 'txt amnt' id= 'amnt1' name = 'amnt[]' oninput='calculateTotal();' onchange='showTransaction();'>
+                                <button type="button" class="butn mt-0 bi bi-plus-square-fill" id = 'butn1'  onclick="createRow()"></button>
+                            </td>
+                        </tr>
                             
                     </tbody>
                     
@@ -593,7 +591,9 @@
                             <div class="col-10 text-center">
                                 <h5>
                                     <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item Allocation for&nbsp; : </strong>&nbsp;&nbsp;&nbsp;
-                                    <em><span  id="item_name"></span></em>
+                                    <em><span  id="item_name"></span> </em>
+                                        <span   id="row_number"></span> 
+                                    <!-- make num hidden -->
                                 </h5>
                             </div>
                             <div class="col">
@@ -602,76 +602,76 @@
                             
                         </div>
                     </div>
-                    
+
                     <div class="modal-body" style="width: auto;">
                         <form  id ='modalForm' action="" method='post' >
-                            {% csrf_token %}
-                            <div class="row container px-5 py-0">
-                                <table class="table border-dark table-sm mb-5 row_sec">
-                                    <tbody >
-                                        <tr>
-                                            <th class="text-center">Godown</th>
-                                            <th class="text-center">Quantity</th>
-                                            <th class="text-center">Rate</th>
-                                            <th class="text-center">per</th>
-                                            <th class="text-center">Amount </th>
-                                        </tr>
-                  
-                                        <tr>
-                                            <td  class="mt-4 border-dark">
-            
-                                                    <select id="gd1"  name="gd[]" class=" rows gdn py-0 px-1 txt1" style="width: 150px;">
-                                                        <option class="opt1" id = "opt" >&nbsp;&nbsp;Select Godown </option> 
-                                                        {% for i in godown %}
-                                                            <option class="opt1" id = "opt" value="{{i.id}}" data-name="{{i.name}}">&nbsp;&nbsp;{{i.name}}</option> 
-                                                        {% endfor %}
-            
-                                                    </select> 
-                                                    
-                                            </td>
-                                            <td  class="m-0"  >
-                                                <input type="number" class="txt1 gdqty p-1" id= 'gdqty1' name = 'gdqty[]'  style="width: 100px;">
-                                                
-                                            </td>
-                                            <td  class="m-0"  >
-                                                <input type="number"  class="txt1 gdrate p-1" id= 'gdrate1' name = 'gdrate[]' style="width: 100px;" >
-                                                
-                                            </td>
-                                            <td   class="m-0" >
-                                                <input type="text" class="txt1 gdper p-1" id= 'gdper1' name = 'gdper[]' style="width: 100px;">
-                                                
-                                            </td>
-            
-                                            <td class="m-0" >
-                                                <input type="number" class="txt1  gdamnt p-1" id= 'gdamnt1' name = 'gdamnt[]' style="width: 150px;">
-                                            </td>
-                                            <button type="button" class="butn mt-0 bi bi-plus-square-fill" id = 'gdbutn1'  onclick="rowGodown()"></button>
-                                        </tr>
-                                        
-   
-                                    </tbody>
-                                                                        
-                                </table> 
-                                <table class="table table-bordered table-sm mt-5 total_sec">
-                                    <tr>
-                                        <td><input type="number" class="txt1" style="width: 150px;"></td>
-                                        <td  class="mt-4 ">
-                                            <input type="number" class="txt1  gdamnt p-1" id= 'gdamnt1' name = 'gdamnt[]' style="width: 100px;">
-                                        </td>
-                                        <td><input type="number" class="txt1" style="width: 100px;"></td>
-                                        <td><input type="number" class="txt1" style="width: 100px;"></td>
-                                        <td class=" mt-0 m-0" >
-                                            <input type="number" class="txt1  gdamnt p-1" id= 'gdamnt1' name = 'gdamnt[]' style="width: 150px;">
-                                        </td>
-                                    </tr>
-                                </table>
-                                
+                            
+                            <div class="row px-5 py-0">
+                                <div class="col-3 text-center">
+                                    Godown
+                                </div>
+                                <div class="col-2 text-center">
+                                    Quantity
+                                </div>
+
+                                <div class="col-2 text-center">
+                                    Rate
+                                </div>
+                                <div class="col-2 text-center">
+                                    per
+                                </div>
+                                <div class="col-3 text-center">
+                                    Amount
+                                </div>
+
+                            </div>
+                            <div class="row-container" style="min-height: 300px;">
+                                <div class="row  gdcontainer my-1" >
+                                    <div class="col-3">
+                                        <select id="gd1"  name="gd[]" class=" rows gdn py-0 px-1 txt1" style="width: 150px;" onchange="updateRateAndPer(this)">
+                                            <option class="opt1" id = "opt" value="0">&nbsp;&nbsp;Select Godown </option> 
+                                            {% for i in godown %}
+                                                <option class="opt1" id = "opt" value="{{i.id}}" data-name="{{i.name}}">&nbsp;&nbsp;{{i.name}}</option> 
+                                            {% endfor %}
+
+                                        </select> 
+                                    </div>
+                                    <div class="col-2">
+                                        <input type="number" class="txt1 gdqty p-1" id= 'gdqty1' name = 'gdqty[]'  style="width: 100px;" onchange="updateAmount(this)">
+                                    </div>
+
+                                    <div class="col-2">
+                                        <input type="number"  class="txt1 gdrate p-1" id= 'gdrate1' name = 'gdrate[]' style="width: 100px;" >
+                                    </div>
+                                    <div class="col-2">
+                                        <input type="text" class="txt1 gdper p-1" id= 'gdper1' name = 'gdper[]' style="width: 100px;">
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="number" class="txt1  gdamnt p-1" id= 'gdamnt1' name = 'gdamnt[]' style="width: 150px;">
+                                    </div>
+                                </div>
+                                <button type="button" class="bt fa fa-plus-square bg-dark text-light  mt-2 p-0" id = 'gdbutn1'
+                                        style="font-size: large; border-radius: 5px;"  title="Add Row" onclick="rowGodown()"> 
+                                </button>
+                            </div>
+
+                            <div class="row  totcontainer">
+                                <div class="col-3"> </div>
+                                <div class="col-2">
+                                    <input type="number" class="txt1 tot_qty p-1" id= 'tot_qty' name = 'tot_qty'  style="width: 100px;">
+                                </div>
+
+                                <div class="col-2"> </div>
+                                <div class="col-2"> </div>
+                                <div class="col-3">
+                                    <input type="number" class="txt1  tot_amnt p-1" id= 'tot_amnt' name = 'tot_amnt' style="width: 150px;">
+                                </div>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer justify-content-center p-1">
                         <button type="submit" class="btn btn-block text-uppercase text-shadow "
-                            data-dismiss="modal" id="saveParty" >
+                            data-dismiss="modal" id="saveGD" >
                             SAVE
                         </button>
                     </div>
@@ -815,17 +815,145 @@
         
 
         var blnc1 = selectedOption.data("name");
-        var blnct1 = selectedOption.data("bal-type");
-        console.log(blnc1)
-        
-        
+        var blnct1 = selectedOption.data("rate");
+        var blnct2 = selectedOption.data("per");
+        var blnct3 = selectedOption.data("quantity");
+        var blnct4 = selectedOption.data("amount");
+
         $("#item_name").text(blnc1);
+        $("#row_number").text(rowLength);
+        $("#rate" + rowLength).val(blnct1);
+        $("#per" + rowLength).val(blnct2);
 
         if (selectedOption) {
             $('#godown').modal('show');
         }
+        
+        
     }
 
+    function updateRateAndPer(selectElement) {
+        var rowContainer = selectElement.closest('.row');
+
+        var rateInput = rowContainer.querySelector('.gdrate');
+        var perInput = rowContainer.querySelector('.gdper');
+
+        var rowLength = $(".item").length;
+        var selectedOption = $("#item" + rowLength + " option:selected");
+
+        if (selectedOption.value !== '0') {
+            var rate = selectedOption.data("rate");
+            var per = selectedOption.data("per");
+
+            rateInput.value = rate;
+            perInput.value = per;
+
+        } else {
+            rateInput.value = '';
+            perInput.value = '';
+        }
+    }
+
+    
+    function updateAmount(inputElement) {
+         var rowContainer = inputElement.closest('.row');
+
+         var amountInput = rowContainer.querySelector('.gdamnt');
+
+         var quantity = parseFloat(inputElement.value) || 0; // Parse as float and default to 0 if not a valid number
+
+         var rateInput = rowContainer.querySelector('.gdrate');
+        var rate = parseFloat(rateInput.value) || 0;
+
+         var calculatedAmount = quantity * rate;
+        amountInput.value = isNaN(calculatedAmount) ? '' : calculatedAmount;
+    }
+
+    function rowGodown() {
+        var gdRow = $(".gdn").length +1;
+        var newRow = document.querySelector('.row.gdcontainer').cloneNode(true);
+
+        newRow.querySelectorAll('[id]').forEach(function(element) {
+            var currentId = element.id;
+            element.id = currentId.replace(/\d+$/, gdRow);
+         });
+
+        var inputs = newRow.querySelectorAll('input');
+        inputs.forEach(function(input) {
+            input.value = '';
+        });
+
+        var button = document.getElementById('gdbutn1');
+        
+        button.parentNode.insertBefore(newRow, button);
+    }
+
+    document.addEventListener('change', function(event) {
+        var input = event.target;
+         if (input.closest('.row.gdcontainer')) {
+            updateTotal(input.closest('.row.gdcontainer'));
+        }
+    });
+
+
+    function updateTotal(row) {
+
+
+        var totalQuantity = 0;
+        var totalAmount = 0;
+
+         var quantityElements = document.querySelectorAll('.gdqty');
+        var amountElements = document.querySelectorAll('.gdamnt');
+
+         for (var i = 0; i < quantityElements.length; i++) {
+            var quantity = parseInt(quantityElements[i].value) || 0;
+            var amount = parseInt(amountElements[i].value) || 0;
+
+             totalQuantity += quantity;
+            totalAmount += amount;
+        }
+
+         document.querySelector('.tot_qty').value = totalQuantity;
+        document.querySelector('.tot_amnt').value = totalAmount;
+    }
+
+    $("#saveGD").on('click' , function(){
+
+        var total_qty = $("#tot_qty").val();
+        var total_amount  = $("#tot_amnt").val();
+        var rowLength = $("#row_number").text();
+
+        $("#qty" + rowLength).val(total_qty);
+        $("#amnt" + rowLength).val(total_amount);
+
+
+    });
+
+
+    function createRow() {
+        var rowCounter =$('#myTable').find('tr').length;
+        const newRow = document.querySelector('#myTable #itemRow').cloneNode(true);
+        console.log(rowCounter);
+        prevCounter = rowCounter-1;
+        console.log(prevCounter);
+
+        // Update the IDs of the cloned row elements
+        // newRow.querySelector(`#item${prevCounter}`).id = `item${rowCounter}`;
+        // newRow.querySelector(`#qty${prevCounter}`).id = `qty${rowCounter}`;
+        // newRow.querySelector(`#rate${prevCounter}`).id = `rate${rowCounter}`;
+        // newRow.querySelector(`#per${prevCounter}`).id = `per${rowCounter}`;
+        // newRow.querySelector(`#amnt${prevCounter}`).id = `amnt${rowCounter}`;
+        // newRow.querySelector(`#butn${prevCounter}`).id = `butn${rowCounter}`;
+
+        // Clear the input values in the cloned row
+        newRow.querySelectorAll('input').forEach(input => {
+        input.value = '';
+        });
+
+        // Append the new row to the table body
+        document.getElementById('myTable').appendChild(newRow);
+    }
+    
  </script>
 
 {% endblock %}
