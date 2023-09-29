@@ -291,7 +291,7 @@
                             
                             <td colspan="16" style="border: none;" class="mt-4">
 
-                                <select id="item1"  name="opt[]" class="txt rows item mb-2 p-0" style="width: 150px; border-radius: 5px;" onchange="showGodown()">
+                                <select id="item1"  name="opt[]" class="txt rows item mb-2 p-0" style="width: 150px; border-radius: 5px;" onchange="showGodown(this)">
                                     <option class="opt" id = "opt" >&nbsp;&nbsp;Select Item </option> 
                                     {% for i in item %}
                                     <option class="opt" id = "opt" value="{{i.id}}" 
@@ -318,24 +318,38 @@
 
                             <td colspan="2" class="text-right mt-0 m-0" style="border: none; ">
                                 <input type="number" style="width: 150px; border-radius: 5px;" class = 'txt amnt' id= 'amnt1' name = 'amnt[]' oninput='calculateTotal();' onchange='showTransaction();'>
-                                <button type="button" class="butn mt-0 bi bi-plus-square-fill" id = 'butn1'  onclick="createRow()"></button>
+                            </td>
+                            <td>                                
+                                <button type="button" class="butn mt-0 bi bi-plus-square-fill" id = 'butn1'  onclick="createRow(this)"></button>
                             </td>
                         </tr>
-                            
+                        
+
                     </tbody>
                     
                     <tr >
                         {% if vouch.voucherNarration == 'Yes' %}
-                        <td colspan="18" style="border: none; ">
+                        <td colspan="16" style="border: none; ">
                             <label class="text-dark">Narration : </label>
                             <textarea name  = 'narrate' style="height: 30px; width:250px; background-color: rgb(255, 229, 183); color: #000; border-radius: 5px;"></textarea></td>
                         {% else %}
-                            <td colspan="18" style="border: none;" name  = 'narrate'></td> 
+                            <td colspan="16" style="border: none;" name  = 'narrate'></td> 
                         {% endif %}    
-                      <td colspan="2" class="text-right" style="border: none; " >
-                        <label class="text-dark text-right" >Total : </label>
-                        <input type="number" class="txt " id = 'total' name="total" readonly style="width: 175px;  border-radius: 5px;">
-                    </td>
+
+                        <td colspan="1" class="text-right" style="border: none; " >
+                            <label class="text-dark text-right" >Quantity : </label>
+                            <input type="number" class="txt " id = 'quantity' name="quantity" readonly style="width: 100px;  border-radius: 5px;">
+                        </td>
+
+
+                        <td colspan="1" class="text-right" style="border: none; " ></td>
+                        <td colspan="1" class="text-right" style="border: none; " ></td>
+
+
+                        <td colspan="2" class="text-right" style="border: none; " >
+                            <label class="text-dark text-right" >Total : </label>
+                            <input type="number" class="txt " id = 'total' name="total" readonly style="width: 150px;  border-radius: 5px;">
+                        </td>
                     </tr>
                 </table>
                 
@@ -366,20 +380,30 @@
                             
                         </div>
                     </div>
+                    <style>
+                         .reccol {
+                            margin-right: 1px; 
+                        }
                     
+                         /* .reccol:not(:last-child) {
+                            border-right: 1px double #ccc;  
+                        } */
+                    
+ 
+                    </style>
                     <div class="modal-body">
                         <form class=" 100vw" id ='modalForm' action="" method='post' >
 
                             {% csrf_token %}
                             <div class="row container mt-3 p-2">
-                                <div class="col-6 ">
+                                <div class="col-6  ">
                                     <div class="row">
                                         <label class="font-weight-bold">Receipt Note No(s) : </label><br>
                                     </div>
                                     <div id="container">
                                         <div class="row row-recdet">
-                                            <div class="col-4">
-                                                <input type="number" style="width: 50%;" name="recno[]" class="txt1 p-1">
+                                            <div class="col-3">
+                                                <input type="number" style="width: 100%;" name="recno[]" class="txt1 p-1">
                                             </div>
                                             <div class="col-8">
                                                 <div class="row">
@@ -391,15 +415,19 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-1 text-left">
+                                                <button type="button" class="bt fa fa-plus-square bg-dark text-light  mt-1 p-0" 
+                                                style="font-size: large; border-radius: 5px;"  title="Add Row" onclick="addRow()"> </button>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <!-- <div class="row">
                                         <button type="button" class="bt fa fa-plus-square bg-dark text-light  mt-2 p-0" 
                                                 style="font-size: large; border-radius: 5px;"  title="Add Row" onclick="addRow()"> </button>
-                                    </div>
+                                    </div> -->
                                 </div>
 
-                                <div class="col-6">
+                                <div class="col-6 reccol">
                                     <div class="row mt-1">
                                         <div class="col-6">
                                             <label class="font-weight-bold">Receipt Doc No : </label>
@@ -604,7 +632,7 @@
                     </div>
 
                     <div class="modal-body" style="width: auto;">
-                        <form  id ='modalForm' action="" method='post' >
+                        <form  id ='gdModal' action="" method='post' >
                             
                             <div class="row px-5 py-0">
                                 <div class="col-3 text-center">
@@ -808,11 +836,10 @@
         container.insertBefore(newRowRecdet, container.lastChild);
     }
 
-    function showGodown(){
-
-        var rowLength = $(".item").length;
-        var selectedOption = $("#item" + rowLength + " option:selected");
-        
+    function showGodown(selectElement){
+  
+        var rowNumber = parseInt(selectElement.id.replace('item', ''));
+        var selectedOption = $("#item" + rowNumber + " option:selected");
 
         var blnc1 = selectedOption.data("name");
         var blnct1 = selectedOption.data("rate");
@@ -821,11 +848,15 @@
         var blnct4 = selectedOption.data("amount");
 
         $("#item_name").text(blnc1);
-        $("#row_number").text(rowLength);
-        $("#rate" + rowLength).val(blnct1);
-        $("#per" + rowLength).val(blnct2);
+        $("#row_number").text(rowNumber);
+
+        $("#rate" + rowNumber).val(blnct1);
+        $("#per" + rowNumber).val(blnct2);
+
+        
 
         if (selectedOption) {
+            document.getElementById('gdModal').reset();
             $('#godown').modal('show');
         }
         
@@ -833,15 +864,18 @@
     }
 
     function updateRateAndPer(selectElement) {
+
         var rowContainer = selectElement.closest('.row');
 
         var rateInput = rowContainer.querySelector('.gdrate');
         var perInput = rowContainer.querySelector('.gdper');
 
-        var rowLength = $(".item").length;
+        var rowLength = $("#row_number").text();
+
         var selectedOption = $("#item" + rowLength + " option:selected");
 
         if (selectedOption.value !== '0') {
+
             var rate = selectedOption.data("rate");
             var per = selectedOption.data("per");
 
@@ -856,16 +890,16 @@
 
     
     function updateAmount(inputElement) {
-         var rowContainer = inputElement.closest('.row');
+        var rowContainer = inputElement.closest('.row');
 
-         var amountInput = rowContainer.querySelector('.gdamnt');
+        var amountInput = rowContainer.querySelector('.gdamnt');
 
-         var quantity = parseFloat(inputElement.value) || 0; // Parse as float and default to 0 if not a valid number
+        var quantity = parseFloat(inputElement.value) || 0; // Parse as float and default to 0 if not a valid number
 
-         var rateInput = rowContainer.querySelector('.gdrate');
+        var rateInput = rowContainer.querySelector('.gdrate');
         var rate = parseFloat(rateInput.value) || 0;
 
-         var calculatedAmount = quantity * rate;
+        var calculatedAmount = quantity * rate;
         amountInput.value = isNaN(calculatedAmount) ? '' : calculatedAmount;
     }
 
@@ -898,22 +932,21 @@
 
     function updateTotal(row) {
 
-
         var totalQuantity = 0;
         var totalAmount = 0;
 
-         var quantityElements = document.querySelectorAll('.gdqty');
+        var quantityElements = document.querySelectorAll('.gdqty');
         var amountElements = document.querySelectorAll('.gdamnt');
 
-         for (var i = 0; i < quantityElements.length; i++) {
+        for (var i = 0; i < quantityElements.length; i++) {
             var quantity = parseInt(quantityElements[i].value) || 0;
             var amount = parseInt(amountElements[i].value) || 0;
 
-             totalQuantity += quantity;
+            totalQuantity += quantity;
             totalAmount += amount;
         }
 
-         document.querySelector('.tot_qty').value = totalQuantity;
+        document.querySelector('.tot_qty').value = totalQuantity;
         document.querySelector('.tot_amnt').value = totalAmount;
     }
 
@@ -927,31 +960,69 @@
         $("#amnt" + rowLength).val(total_amount);
 
 
+        document.getElementById('gdModal').reset();
+
+        const rowContainer = document.querySelector('.row-container');
+        const addedRows = rowContainer.querySelectorAll('.gdcontainer:not(:first-child)'); // Exclude the first row
+        addedRows.forEach(row => {
+            row.remove();
+        });
+
+        calculateTotal();
+        // closeModal('modal1');
+        // resetModalContent('modal1');
+
     });
 
 
-    function createRow() {
+    function createRow(button) {
+
         var rowCounter =$('#myTable').find('tr').length;
         const newRow = document.querySelector('#myTable #itemRow').cloneNode(true);
-        console.log(rowCounter);
-        prevCounter = rowCounter-1;
-        console.log(prevCounter);
+        var prevCounter = rowCounter-1;
 
-        // Update the IDs of the cloned row elements
-        // newRow.querySelector(`#item${prevCounter}`).id = `item${rowCounter}`;
-        // newRow.querySelector(`#qty${prevCounter}`).id = `qty${rowCounter}`;
-        // newRow.querySelector(`#rate${prevCounter}`).id = `rate${rowCounter}`;
-        // newRow.querySelector(`#per${prevCounter}`).id = `per${rowCounter}`;
-        // newRow.querySelector(`#amnt${prevCounter}`).id = `amnt${rowCounter}`;
-        // newRow.querySelector(`#butn${prevCounter}`).id = `butn${rowCounter}`;
+        newRow.querySelectorAll('[id]').forEach(function(element) {
+            var currentId = element.id;
+            element.id = currentId.replace(/\d+$/, rowCounter);
+         });
 
-        // Clear the input values in the cloned row
         newRow.querySelectorAll('input').forEach(input => {
-        input.value = '';
+            input.value = '';
         });
 
-        // Append the new row to the table body
+        const buttons = document.getElementById('myTable').querySelectorAll('button');
+            buttons.forEach(button => {
+                button.style.display = 'none';
+            });
+
+            // Show the button in the last row
+            const lastRowButton = newRow.querySelector('button');
+            lastRowButton.style.display = 'block';
+
         document.getElementById('myTable').appendChild(newRow);
+    }
+
+
+    function calculateTotal() {
+        
+        var qtyInputs = document.querySelectorAll('.qty');
+        var amntInputs = document.querySelectorAll('.amnt');
+        var quantityInput = document.getElementById('quantity');
+        var totalInput = document.getElementById('total');
+        
+        var totalQty = 0;
+        var totalAmount = 0;
+        
+        for (var i = 0; i < qtyInputs.length; i++) {
+            var qty = parseInt(qtyInputs[i].value) || 0;
+            var amnt = parseInt(amntInputs[i].value) || 0;
+            
+            totalQty += qty;
+            totalAmount += amnt;
+        }
+        
+        quantityInput.value = totalQty;
+        totalInput.value = totalAmount;  
     }
     
  </script>
