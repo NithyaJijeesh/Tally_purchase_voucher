@@ -2062,8 +2062,10 @@ class purchase_voucher(models.Model):
 
 
 class purchase_particulars(models.Model):
+
     purchase_voucher = models.ForeignKey(purchase_voucher,on_delete=models.CASCADE,null=True,blank=True)
     company = models.ForeignKey(Companies,on_delete=models.CASCADE,null=True,blank=True)
+    
     item_id = models.IntegerField(null= True)
     item = models.CharField(max_length = 100,null=True,blank=True)
     quantity =  models.IntegerField(null= True)

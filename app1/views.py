@@ -49,6 +49,7 @@ from django.http import HttpResponse
 import datetime
 from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
+import json
 
 # Create your views here.
 
@@ -13751,15 +13752,6 @@ def create_payment_voucher(request):
 
             particulars_id = request.POST.getlist("opt[]")
             amounts = request.POST.getlist("amnt[]")
-        # print(pid)
-        # print(acc)
-        # print(accnt[1])
-        # print(type(acc))
-        # print(date1)
-        # print(amount)
-        # print(nrt)
-        
-            
 
         payment_voucher(company = comp, pid = pid,account = accnt[1],date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
  
@@ -16978,14 +16970,14 @@ def pendingcheques(request):
     # print(bank_name)
     # print(acc_no)
     ledgers = tally_ledger.objects.filter(company = comp)
-    cheques1 = bank_transcations.objects.filter(company = comp, transcation_type = 'Cheque',bank_account = bank_name).values()
+    cheques1 = bank_transactions.objects.filter(company = comp, transcation_type = 'Cheque',bank_account = bank_name).values()
     for ch in cheques1:
          p_name = tally_ledger.objects.get(id = ch['pay_particular']).name
         #  print(p_name)
         #  p_name = payment_particulars.objects.filter(particular_id = cheques['pay_particular'],company = comp).values('particular')[0]['particular']
          ch['particular_name'] = p_name
 
-    cheques = bank_transcations.objects.filter(company = comp, transcation_type = 'Cheque',bank_account = bank_name)
+    cheques = bank_transactions.objects.filter(company = comp, transcation_type = 'Cheque',bank_account = bank_name)
     total = 0
     for i in cheques:
         total += i.amount
@@ -18592,7 +18584,7 @@ def purchase_vouchers(request):
         godown = CreateGodown.objects.filter(comp = comp)
 
      
-        v  = 1 if purchase_voucher.objects.filter(company = comp).values('pur_id').last() is None else purchase_voucher.objects.filter(company = comp).values('pid').last()['pid']+1
+        v  = 1 if purchase_voucher.objects.filter(company = comp).values('pur_id').last() is None else purchase_voucher.objects.filter(company = comp).values('pur_id').last()['pur_id']+1
         
         tally = Companies.objects.filter(id=t_id)
         context = {
@@ -18616,9 +18608,115 @@ def create_purchase_voucher(request):
             t_id = request.session['t_id']
         else:
             return redirect('/')
+        
+        comp = Companies.objects.get(id = t_id)
+        name=request.POST['type']
+        vouch = Voucher.objects.filter(voucher_type = 'Purchase',company = comp).get(voucher_name = name)
 
-    comp = Companies.objects.get(id = t_id)
+        if request.method == 'POST':
 
+            # modal receipt deatils
+            receipt_no = []
+            receipt_dates = []
+
+            modal_data_receipt = request.POST.get('modal_data_receipt')
+            modal_data = json.loads(modal_data_receipt)
+
+            receipt_docno = modal_data.get('recdocno')
+            dispatch = modal_data.get('dispch')
+            destination = modal_data.get('destn')
+            carrier = modal_data.get('carrier')
+            bill_of_lading = modal_data.get('bill_lading')
+            lading_date = modal_data.get('lad_date')
+            vehicle_no = modal_data.get('veh_num')
+            
+            # modal receipt numbers deatils
+            modal_data_recnote = request.POST.get('modal_data_receiptnotes')
+            modal_data_array = json.loads(modal_data_recnote)
+
+            for row_data in modal_data_array:
+                recno = row_data.get('recno')
+                recdate = row_data.get('recdate')
+
+                receipt_no.append(recno)
+                receipt_dates.append(recdate)
+
+
+            # part details modal data
+            modal_data_party = request.POST.get('modal_data_party')
+            modal_party = json.loads(modal_data_party)
+
+            supplier = modal_party.get('supplier')
+            mailing_name = modal_party.get('mailing_name')
+            address = modal_party.get('address')
+            state = modal_party.get('state')
+            country = modal_party.get('country')
+            gst_type = modal_party.get('gst_type')
+            gst_num =  modal_party.get('gst_num')
+
+
+            purchase_voucher_id = request.POST.get('idlbl')
+            supplier_invoice_num = request.POST.get('sup_invno')
+            supplier_invoice_date = request.POST.get('inv_date')
+            voucher_date = request.POST.get('date1')
+            party_account = request.POST.get('partyacc')
+            purchase_ledger = request.POST.get('purchacc')
+
+            amount = request.POST.get('total')
+            quantity = request.POST.get('quantity')
+            narration = request.POST.get('narrate')
+            
+            item_id = request.POST.getlist("opt[]")
+            qnty = request.POST.getlist("qty[]")
+            rate = request.POST.getlist("rate[]")
+            per = request.POST.getlist("per[]")
+            amounts = request.POST.getlist("amnt[]")
+
+            
+        purchase_voucher(company = comp, pur_id = purchase_voucher_id,sup_inv_no = supplier_invoice_num,sup_inv_date = supplier_invoice_date,
+                         vouch_date = voucher_date,party_accname = party_account,purchase_ledger = purchase_ledger, 
+                         amount = amount ,quantity = quantity,narration = narration ,voucher = vouch, 
+                         
+                         receipt_doc_no = receipt_docno, dispatched_through = dispatch, destination = destination,carriername_agent = carrier, 
+                         bill_of_lading  = bill_of_lading,receipt_date = lading_date,motor_vehicle_no = vehicle_no,
+
+                         supplier = supplier, mailing_name = mailing_name, address =  address,state = state,country = country,
+                         gst_treatment = gst_type, gst_number = gst_num).save()
+ 
+
+
+        purch_vouch= purchase_voucher.objects.filter(company = comp).last()
+        
+        items = []
+        for i in item_id:
+            id = stock_itemcreation.objects.get(id = i)
+            items.append(id.name)
+
+        if len(item_id)==len(qnty) == len(rate) == len(amounts) and item_id and qnty and rate and amounts:
+               
+            feilds=zip(items,item_id,qnty,rate,per,amounts)
+
+            mapped=list(feilds)
+            print(mapped)
+            for m in mapped:
+                purchase_particulars.objects.get_or_create( item =m[0],     
+                                                            item_id =m[1], 
+                                                            quantity =  m[2] ,
+                                                            rate = m[3], 
+                                                            per = m[4],
+                                                            amount = m[5],
+                                                            purchase_voucher = purch_vouch,
+                                                            company = comp)
+
+        if len(receipt_no)==len(receipt_dates) and  receipt_no and receipt_dates:
+
+            rec_feilds=zip(receipt_no,receipt_dates)
+            mapped=list(rec_feilds)
+
+            for i in mapped:
+                receipt_note_no.objects.get_or_create(purchase = purch_vouch,note_no = i[0], date= i[1])
+            # print(mapped)
+        
     return redirect('/list_purchase_voucher')
 
 
@@ -18640,7 +18738,6 @@ def getaccdetails(request):
         country = tally_ledg.country
         gst_type = tally_ledg.registration_type
         gst_num = tally_ledg.gst_uin
-        print(gst_num)
         return JsonResponse({"status": "not", 'ledger_name': led_name, 'address' : adds, 'state' : state, 'country': country,'gst_type':gst_type, 'gst_num': gst_num})
     return redirect('/')
 

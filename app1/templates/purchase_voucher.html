@@ -121,7 +121,7 @@
     }
     .txt1{
         height: 25px; 
-        width: 170px;
+        width: 150px;
         padding: 0;
         background-color: rgb(245, 240, 230);
         color: #000;
@@ -141,7 +141,7 @@
     .modal-content{
         position: relative;
         color:rgb(17, 54, 86) ;
-        width: 800px;
+        width: 850px;
         min-height: 500px;
         border-radius: 10px;
         margin-top: 50px;
@@ -154,17 +154,16 @@
         width: 200px;
         justify-content: center;
     }
-    /* .modal{
-        overflow-y: scroll;
+    .reccol:not(:last-child) {
+        border-right: 1px double #ccc; 
     }
-   */
         
 </style>
 <div class="container-fluid" >
     <div class="main-panel" style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
         <div class="content-wrapper" >
-            <form action="{% url 'create_purchase_voucher' %}" id="frmvouch" method="POST" >
-                {% csrf_token %} <!--changed from table-responsive-->
+            
+                 <!--changed from table-responsive-->
             <div class="row d-flex my-0" style="background-color:  rgb(124, 186, 224);color:rgb(0, 0, 0);width: 100%;margin: auto;">
                 <div class="col" style="font-weight:600 ;text-transform:capitalize;">Accounting Voucher Creation</div>
                 <div class="col-4" style="font-weight:600 ;text-transform:capitalize;">{{company.name}}</div>
@@ -173,8 +172,10 @@
                     <span class="pull-right clickable" data-effect="fadeOut"><i class="fa fa-times" style="color: black;"></i></span></a>
                 </div>                      
             </div>
-            
+        <form action="{% url 'create_purchase_voucher' %}" id="frmvouch" method="POST" >
+                {% csrf_token %}
             <div class="table-responsive my-0">
+                
                 <table class="table table-bordered table-sm border-dark" style="background-color: rgb(245, 240, 230);color:rgb(0, 0, 0);">
                   <tr  class="p-2">
                     <th colspan="18" style="border-bottom: solid 0.5px rgba(205, 196, 196, 0.2) ; border-right:none ;">
@@ -212,6 +213,13 @@
                             </span>
                         </div>
 
+                        <!-- modal for receipt modal -->
+                        <input type="hidden" name="modal_data_receipt" id="modal_data_receipt" value="">
+                        <input type="hidden" name="modal_data_receiptnotes" id="modal_data_receiptnotes" value="">
+
+                        <!-- modal for party modal -->
+                        <input type="hidden" name="modal_data_party" id="modal_data_party" value="">
+
                         <div  class= "party_account" style="color: #000;font-weight:500 ;text-transform:capitalize; font-size: 18px;">
                             <span class = 'input-group'>
                                 <label style=" font-weight: 550;">&nbsp;&nbsp;Party A/c Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</label>
@@ -231,7 +239,7 @@
 
                                 </select> 
                             </span>
-                            <span class="input-group party_curbalance d-none"> <!--change to d-none-->
+                            <span class="input-group party_curbalance d-none"> 
                                 <label>&nbsp;&nbsp;Current Balance &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</label>
                                 <input type="number" class = 'txt m-0 p-0' style="width: 150px; border-radius: 5px;" id= 'party_curblnc' name = 'party_curblnc'>&nbsp;
                                 <input type="text" class = 'txt m-0 p-0' style="width: 50px; border-radius: 5px;" id= 'party_curblnct' name = 'party_curblnct'> 
@@ -270,7 +278,7 @@
                       <input type="hidden" name = 'date1' value="{{date1|date:'Y-m-d'}}">
                       <div>{{date1 | date:'l'}}</div>
                     </th>
-
+                    
                 </tr>
 
                     <tbody style="border-color: rgb(112, 111, 111); " class = 'part' id="myTable">
@@ -380,60 +388,47 @@
                             
                         </div>
                     </div>
-                    <style>
-                         .reccol {
-                            margin-right: 1px; 
-                        }
-                    
-                         /* .reccol:not(:last-child) {
-                            border-right: 1px double #ccc;  
-                        } */
-                    
- 
-                    </style>
+
                     <div class="modal-body">
                         <form class=" 100vw" id ='modalForm' action="" method='post' >
-
                             {% csrf_token %}
                             <div class="row container mt-3 p-2">
-                                <div class="col-6  ">
+                                <div class="col-6 reccol p-2 rec_noteno">
                                     <div class="row">
                                         <label class="font-weight-bold">Receipt Note No(s) : </label><br>
                                     </div>
                                     <div id="container">
                                         <div class="row row-recdet">
                                             <div class="col-3">
-                                                <input type="number" style="width: 100%;" name="recno[]" class="txt1 p-1">
+                                                <input type="number" style="width: 100%;" name="recno[]" class="rec_note txt1 p-1">
                                             </div>
-                                            <div class="col-8">
+                                            <div class="col-7">
                                                 <div class="row">
-                                                    <div class="col">
+                                                    <div class="col-1">
                                                         <label> Date:</label>
-                                                        <input type="date" name="recdate[]" class="txt1 p-1">
+                                                    </div>
+                                                    <div class="col-5">
+                                                        <input type="date" name="recdate[]" class="rec_note txt1 p-1">
                                                         &nbsp;
                                                         
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-1 text-left">
-                                                <button type="button" class="bt fa fa-plus-square bg-dark text-light  mt-1 p-0" 
+                                            <div class="col-1 button_container">
+                                                <button type="button" class="bt fa fa-plus-square bg-dark text-light text-center  mt-1 p-0" 
                                                 style="font-size: large; border-radius: 5px;"  title="Add Row" onclick="addRow()"> </button>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- <div class="row">
-                                        <button type="button" class="bt fa fa-plus-square bg-dark text-light  mt-2 p-0" 
-                                                style="font-size: large; border-radius: 5px;"  title="Add Row" onclick="addRow()"> </button>
-                                    </div> -->
                                 </div>
 
-                                <div class="col-6 reccol">
+                                <div class="col-6 reccol p-3">
                                     <div class="row mt-1">
                                         <div class="col-6">
                                             <label class="font-weight-bold">Receipt Doc No : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="number"  name="recdocno" class="txt1 p-1">
+                                            <input type="text"  name="recdocno"  id="recdocno" class="txt1 p-1">
                                         </div>
                                     </div>
                                     <div class="row mt-1">
@@ -441,7 +436,7 @@
                                             <label class="font-weight-bold">Dispatched Through : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="text"  name="dispch" class="txt1 p-1">
+                                            <input type="text"  name="dispch" id="dispch" class="txt1 p-1">
                                         </div>
                                     </div>
                                     <div class="row mt-1">
@@ -451,15 +446,15 @@
                                             <label class="font-weight-bold">Destination : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="text"  name="destn" class="txt1 p-1">
+                                            <input type="text"  name="destn" id="destn" class="txt1 p-1">
                                         </div>
                                     </div>
                                     <div class="row mt-1">
                                         <div class="col-6">
-                                            <label class="font-weight-bold">Carrier Name/Agent : </label>
+                                            <label class="font-weight-bold">Carrier Name/Agent: </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="text"  name="carrier" class="txt1 p-1">
+                                            <input type="text"  name="carrier" id="carrier" class="txt1 p-1">
                                         </div>
                                     </div>
 
@@ -468,7 +463,7 @@
                                             <label class="font-weight-bold">Bill of Lading/LR-RR No : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="text"  name="carrier" class="txt1 p-1">
+                                            <input type="text"  name="bill_lading" id="bill_lading" class="txt1 p-1">
                                         </div>
                                     </div>
 
@@ -477,7 +472,7 @@
                                             <label class="font-weight-bold">Date : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="date"  name="lad_date" class="txt1 p-1">
+                                            <input type="date"  name="lad_date"  id="lad_date" class="txt1 p-1">
                                         </div>
                                     </div>
 
@@ -486,7 +481,7 @@
                                             <label class="font-weight-bold">Motor Vehicle No : </label>
                                         </div>
                                         <div class="col-6">
-                                            <input type="text"  name="veh_num" class="txt1 p-1">
+                                            <input type="text"  name="veh_num" id="veh_num" class="txt1 p-1">
                                         </div>
                                     </div>
                                 </div>
@@ -620,8 +615,7 @@
                                 <h5>
                                     <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item Allocation for&nbsp; : </strong>&nbsp;&nbsp;&nbsp;
                                     <em><span  id="item_name"></span> </em>
-                                        <span   id="row_number"></span> 
-                                    <!-- make num hidden -->
+                                        <span   id="row_number d-none"></span> 
                                 </h5>
                             </div>
                             <div class="col">
@@ -651,7 +645,6 @@
                                 <div class="col-3 text-center">
                                     Amount
                                 </div>
-
                             </div>
                             <div class="row-container" style="min-height: 300px;">
                                 <div class="row  gdcontainer my-1" >
@@ -674,13 +667,16 @@
                                     <div class="col-2">
                                         <input type="text" class="txt1 gdper p-1" id= 'gdper1' name = 'gdper[]' style="width: 100px;">
                                     </div>
-                                    <div class="col-3">
-                                        <input type="number" class="txt1  gdamnt p-1" id= 'gdamnt1' name = 'gdamnt[]' style="width: 150px;">
+                                    <div class="col-3 text-left">
+                                        <input type="number" class="txt1  gdamnt p-0" id= 'gdamnt1' name = 'gdamnt[]' style="width: 150px;">
+                                        <!-- <button type="button" class="bt fa fa-plus-square bg-dark text-light  mt-2 p-0" id = 'gdbutn1'
+                                        style="font-size: large; border-radius: 5px;"  title="Add Row" onclick="rowGodown()"> </button>         -->
+
                                     </div>
+                                              
                                 </div>
                                 <button type="button" class="bt fa fa-plus-square bg-dark text-light  mt-2 p-0" id = 'gdbutn1'
-                                        style="font-size: large; border-radius: 5px;"  title="Add Row" onclick="rowGodown()"> 
-                                </button>
+                                        style="font-size: large; border-radius: 5px;"  title="Add Row" onclick="rowGodown()"> </button>  
                             </div>
 
                             <div class="row  totcontainer">
@@ -818,8 +814,42 @@
                     $("#gst_num").val(data.gst_num);
                 }
             }
-        })
+        });
 
+        var modalData = {
+            recdocno: document.getElementById("recdocno").value,
+            dispch:document.getElementById("dispch").value,
+            destn: document.getElementById("destn").value,
+            carrier: document.getElementById("carrier").value,
+            bill_lading: document.getElementById("bill_lading").value,
+            lad_date: document.getElementById("lad_date").value,
+            veh_num: document.getElementById("veh_num").value,
+        };
+
+        var modalDataJSON = JSON.stringify(modalData);
+        document.getElementById("modal_data_receipt").value = modalDataJSON;
+        
+        var modalDataArray = [];
+
+        var rows = document.querySelectorAll(".row-recdet");
+
+        rows.forEach(function (row) {
+            var recno = row.querySelector(".rec_note[name='recno[]']").value;
+            var recdate = row.querySelector(".rec_note[name='recdate[]']").value;
+
+            var rowData = {
+                recno: recno,
+                recdate: recdate,
+            };
+
+            modalDataArray.push(rowData);
+        });
+
+        var modalDataJSON = JSON.stringify(modalDataArray);
+
+        document.getElementById("modal_data_receiptnotes").value = modalDataJSON;
+
+        $('#rec_det').modal('hide');
     });
 
 
@@ -831,9 +861,24 @@
             inputElements[i].value = '';
         }
 
+        var oldButtons = document.querySelectorAll('.row-recdet .bt');
+        oldButtons.forEach(function(button) {
+            button.remove();
+        });
+
+        var addButton = document.createElement('button');
+        addButton.type = 'button';
+        addButton.className = 'bt fa fa-plus-square bg-dark text-light text-center mt-1 p-0';
+        addButton.style = 'font-size: large; border-radius: 5px;';
+        addButton.title = 'Add Row';
+        addButton.onclick = addRow;
+       
+        var buttonContainer = newRow.querySelector('.button_container');
+        buttonContainer.innerHTML = '';
+        buttonContainer.appendChild(addButton);
+
         document.querySelector('.row-recdet').parentNode.appendChild(newRow);
-        var container = document.getElementById('container');
-        container.insertBefore(newRowRecdet, container.lastChild);
+       
     }
 
     function showGodown(selectElement){
@@ -963,14 +1008,13 @@
         document.getElementById('gdModal').reset();
 
         const rowContainer = document.querySelector('.row-container');
-        const addedRows = rowContainer.querySelectorAll('.gdcontainer:not(:first-child)'); // Exclude the first row
+        const addedRows = rowContainer.querySelectorAll('.gdcontainer:not(:first-child)');  
         addedRows.forEach(row => {
             row.remove();
         });
 
         calculateTotal();
-        // closeModal('modal1');
-        // resetModalContent('modal1');
+ 
 
     });
 
@@ -991,13 +1035,13 @@
         });
 
         const buttons = document.getElementById('myTable').querySelectorAll('button');
-            buttons.forEach(button => {
-                button.style.display = 'none';
-            });
+        buttons.forEach(button => {
+            button.style.display = 'none';
+        });
 
-            // Show the button in the last row
-            const lastRowButton = newRow.querySelector('button');
-            lastRowButton.style.display = 'block';
+        // Show the button in the last row
+        const lastRowButton = newRow.querySelector('button');
+        lastRowButton.style.display = 'block';
 
         document.getElementById('myTable').appendChild(newRow);
     }
@@ -1024,6 +1068,41 @@
         quantityInput.value = totalQty;
         totalInput.value = totalAmount;  
     }
+
+
+
+    // document.getElementById("saveReceipt").addEventListener("click", function () {
+
+        
+    // });
+
+
+    document.getElementById("saveParty").addEventListener("click", function () {
+        console.log(document.getElementById("supplier").value)
+        console.log(document.getElementById("mail_name").value)
+        console.log(document.getElementById("party_add").value)
+        console.log(document.getElementById("party_state").value)
+        console.log(document.getElementById("gst_type").value)
+        console.log(document.getElementById("gst_num").value)
+
+
+        var modalData = {
+            supplier : document.getElementById("supplier").value,
+            mailing_name :document.getElementById("mail_name").value,
+            address : document.getElementById("party_add").value,
+            state: document.getElementById("party_state").value,
+            country : document.getElementById("party_country").value,
+            gst_type : document.getElementById("gst_type").value,
+            gst_num: document.getElementById("gst_num").value,
+        };
+
+        var modalDataJSON = JSON.stringify(modalData);
+        document.getElementById("modal_data_party").value = modalDataJSON;
+
+        
+        $('#party_det').modal('hide');
+        });
+
     
  </script>
 
