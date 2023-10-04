@@ -325,7 +325,7 @@
                             </td>
 
                             <td colspan="2" class="text-right mt-0 m-0" style="border: none; ">
-                                <input type="number" style="width: 150px; border-radius: 5px;" class = 'txt amnt' id= 'amnt1' name = 'amnt[]' oninput='calculateTotal();' onchange='showTransaction();'>
+                                <input type="number" style="width: 150px; border-radius: 5px;" class = 'txt amnt' id= 'amnt1' name = 'amnt[]'>
                             </td>
                             <td>                                
                                 <button type="button" class="butn mt-0 bi bi-plus-square-fill" id = 'butn1'  onclick="createRow(this)"></button>
@@ -609,13 +609,15 @@
         <div class="modal fade " id="godown">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content" style="background-color: #213b52; color:azure;">
+                    <form  id ='gdModal' action="{% url 'purchase_godown' %}" method='post' >
+                        {% csrf_token %}
                     <div class="modal-header">
                         <div class="row container m-0 p-1">
                             <div class="col-10 text-center">
                                 <h5>
                                     <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item Allocation for&nbsp; : </strong>&nbsp;&nbsp;&nbsp;
-                                    <em><span  id="item_name"></span> </em>
-                                        <span   id="row_number d-none"></span> 
+                                    <em><label id="item_name" ></label> </em>
+                                        <span id="row_number" class="d-none"></span> 
                                 </h5>
                             </div>
                             <div class="col">
@@ -626,8 +628,7 @@
                     </div>
 
                     <div class="modal-body" style="width: auto;">
-                        <form  id ='gdModal' action="" method='post' >
-                            
+                        
                             <div class="row px-5 py-0">
                                 <div class="col-3 text-center">
                                     Godown
@@ -669,9 +670,6 @@
                                     </div>
                                     <div class="col-3 text-left">
                                         <input type="number" class="txt1  gdamnt p-0" id= 'gdamnt1' name = 'gdamnt[]' style="width: 150px;">
-                                        <!-- <button type="button" class="bt fa fa-plus-square bg-dark text-light  mt-2 p-0" id = 'gdbutn1'
-                                        style="font-size: large; border-radius: 5px;"  title="Add Row" onclick="rowGodown()"> </button>         -->
-
                                     </div>
                                               
                                 </div>
@@ -691,18 +689,21 @@
                                     <input type="number" class="txt1  tot_amnt p-1" id= 'tot_amnt' name = 'tot_amnt' style="width: 150px;">
                                 </div>
                             </div>
-                        </form>
+                        
                     </div>
                     <div class="modal-footer justify-content-center p-1">
                         <button type="submit" class="btn btn-block text-uppercase text-shadow "
-                            data-dismiss="modal" id="saveGD" >
+                            data-dismiss="modal" id="saveGodown" >
                             SAVE
                         </button>
                     </div>
+                </form>
                 </div>
             </div>
         </div>
         <!-- End of Godwn Modal -->
+
+        
     </div>
 </div>
 
@@ -785,7 +786,6 @@
     $(document).on("click","#saveReceipt",function() {
 
         const ledg = $("#partyacc").val();
-        // console.log(ledg)
         $.ajax({
             url : '{% url "getaccdetails" %}',
             type: 'POST',
@@ -794,7 +794,6 @@
                         csrfmiddlewaretoken: '{{ csrf_token }}'
                     },
             success : function(data){
-                // console.log('Data is :', data)
                 $("#supplier").val(data.ledger_name);
                 $("#mail_name").val(data.ledger_name);
                 $("#party_add").val(data.address);
@@ -884,6 +883,7 @@
     function showGodown(selectElement){
   
         var rowNumber = parseInt(selectElement.id.replace('item', ''));
+        
         var selectedOption = $("#item" + rowNumber + " option:selected");
 
         var blnc1 = selectedOption.data("name");
@@ -898,7 +898,6 @@
         $("#rate" + rowNumber).val(blnct1);
         $("#per" + rowNumber).val(blnct2);
 
-        
 
         if (selectedOption) {
             document.getElementById('gdModal').reset();
@@ -911,12 +910,9 @@
     function updateRateAndPer(selectElement) {
 
         var rowContainer = selectElement.closest('.row');
-
         var rateInput = rowContainer.querySelector('.gdrate');
         var perInput = rowContainer.querySelector('.gdper');
-
         var rowLength = $("#row_number").text();
-
         var selectedOption = $("#item" + rowLength + " option:selected");
 
         if (selectedOption.value !== '0') {
@@ -931,6 +927,7 @@
             rateInput.value = '';
             perInput.value = '';
         }
+
     }
 
     
@@ -938,9 +935,7 @@
         var rowContainer = inputElement.closest('.row');
 
         var amountInput = rowContainer.querySelector('.gdamnt');
-
-        var quantity = parseFloat(inputElement.value) || 0; // Parse as float and default to 0 if not a valid number
-
+        var quantity = parseFloat(inputElement.value) || 0; 
         var rateInput = rowContainer.querySelector('.gdrate');
         var rate = parseFloat(rateInput.value) || 0;
 
@@ -995,7 +990,7 @@
         document.querySelector('.tot_amnt').value = totalAmount;
     }
 
-    $("#saveGD").on('click' , function(){
+    $("#saveGodown").on('click' , function(e){
 
         var total_qty = $("#tot_qty").val();
         var total_amount  = $("#tot_amnt").val();
@@ -1014,7 +1009,9 @@
         });
 
         calculateTotal();
- 
+
+        var form = document.getElementById('gdModal');
+        form.submit();
 
     });
 
@@ -1070,21 +1067,7 @@
     }
 
 
-
-    // document.getElementById("saveReceipt").addEventListener("click", function () {
-
-        
-    // });
-
-
     document.getElementById("saveParty").addEventListener("click", function () {
-        console.log(document.getElementById("supplier").value)
-        console.log(document.getElementById("mail_name").value)
-        console.log(document.getElementById("party_add").value)
-        console.log(document.getElementById("party_state").value)
-        console.log(document.getElementById("gst_type").value)
-        console.log(document.getElementById("gst_num").value)
-
 
         var modalData = {
             supplier : document.getElementById("supplier").value,

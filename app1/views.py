@@ -18741,4 +18741,86 @@ def getaccdetails(request):
         return JsonResponse({"status": "not", 'ledger_name': led_name, 'address' : adds, 'state' : state, 'country': country,'gst_type':gst_type, 'gst_num': gst_num})
     return redirect('/')
 
+
+def purchase_godown(request):
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+        comp = Companies.objects.get(id = t_id)
+
+        
+
+        gd_data = request.POST.getlist('gd[]')
+        gdqty_data = request.POST.getlist('gdqty[]')
+        # godown = request.POST.getlist('gd[]')
+        # quantity = request.POST.getlist('gdqty[]')
+        # rate = request.POST.getlist('gdrate[]')
+        # per = request.POST.getlist('gdper[]')
+        # amount = request.POST.getlist('gdamnt[]')
+
+        # print(item)
+        print(gd_data)
+        print(gdqty_data)
+        # print(rate)
+        # print(per)
+        # print(amount)
+
+        # godown_items = request.POST.getlist("gd[]")
+        # quantities = request.POST.getlist("gdqty[]")
+        # rates = request.POST.getlist("gdrate[]")
+        # # Add more fields as needed
+
+        # # Create and save GodownItem objects
+        # for i in range(len(godown_items)):
+        #     godown_item = GodownItem(
+        #         godown=godown_items[i],
+        #         quantity=quantities[i],
+        #         rate=rates[i],
+        #         # Add more fields as needed
+        #     )
+        #     godown_item.save()
+
+        # # Return a success response
+        # return JsonResponse({"message": "Data saved successfully"})
+
+        # if len(item)==len(quantity) == len(rate) == len(amount) and item and quantity and rate and amount:
+               
+        #     feilds=zip(item,quantity,rate,per,amount)
+
+        #     mapped=list(feilds)
+        #     print(mapped)
+        #     for m in mapped:
+        #         Godown_Items.objects.get_or_create(  name=godown,
+        #                                             quantity=quantity,
+        #                                             rate=rate,
+        #                                             per=per,
+        #                                             value=amount,
+        #                                             item = item,
+        #                                             comp = comp)
+        # for row_data in data:
+        #     print(row_data)
+        #     godown_id = row_data['godownId']
+        #     godown = CreateGodown.objects.get(id = godown_id)
+        #     quantity = row_data['quantity']
+        #     rate = row_data['rate']
+        #     per = row_data['per']
+        #     amount = row_data['amount']
+
+
+        # godown_items = Godown_Items(
+           
+        # )
+        # godown_items.save()
+
+        #     response_data = {'message': 'Data saved successfully'}
+        return JsonResponse(response_data)
+
+        # except json.JSONDecodeError as e:
+        #     error_message = f'JSON decoding error: {str(e)}'
+        # return JsonResponse({'error': error_message}, status=400)
+
+    return redirect('/')
+
 #------- End of Purchase Vouchers----

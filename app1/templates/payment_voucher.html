@@ -817,36 +817,36 @@ function showTransaction(){
         console.log("cheque");
         console.log($("#chdate").val());
         $.ajax({
-                    type : 'POST',
-                    url:"{% url 'bank_transaction' %}",
+            type : 'POST',
+            url:"{% url 'bank_transaction' %}",
+        
+            data:{
                 
-                    data:{
-                        
-                        id : vouch_id, 
-                        vouch_type : vouchtype,
-                        part : $("#partid").val(),
-                        bacc : $("#chacc").text(),
-                        t_type : $("#t_type").text(),
-                        instnum:$("#chnumber").val(),
-                        instdate :$("#chdate").val(),
-                        efaccnum :0,
-                        efifs :0,
-                        efbank :0,
-                        amount :$("#chamnt").text(),
-                        csrfmiddlewaretoken: '{{ csrf_token }}'
-                        
-                    },
-                    
-                    success: function(response) {
-                        console.log(response.message)
-                        if(response.message === 'success'){
-                            $('#modalForm')[0].reset();
-                        
-                        }
-                        
-                    },
-                    
-                });
+                id : vouch_id, 
+                vouch_type : vouchtype,
+                part : $("#partid").val(),
+                bacc : $("#chacc").text(),
+                t_type : $("#t_type").text(),
+                instnum:$("#chnumber").val(),
+                instdate :$("#chdate").val(),
+                efaccnum :0,
+                efifs :0,
+                efbank :0,
+                amount :$("#chamnt").text(),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+                
+            },
+            
+            success: function(response) {
+                console.log(response.message)
+                if(response.message === 'success'){
+                    $('#modalForm')[0].reset();
+                
+                }
+                
+            },
+            
+        });
     }
     else if($("#t_type").text() === 'e-Fund Transfer'){
         console.log("e-f");
