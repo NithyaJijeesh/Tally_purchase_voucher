@@ -18741,6 +18741,7 @@ def getaccdetails(request):
         return JsonResponse({"status": "not", 'ledger_name': led_name, 'address' : adds, 'state' : state, 'country': country,'gst_type':gst_type, 'gst_num': gst_num})
     return redirect('/')
 
+from django.http import HttpResponseBadRequest
 
 def purchase_godown(request):
     if 't_id' in request.session:
@@ -18750,76 +18751,70 @@ def purchase_godown(request):
             return redirect('/')
         comp = Companies.objects.get(id = t_id)
 
-        
+        if request.method == 'POST':
+            try:
 
-        gd_data = request.POST.getlist('gd[]')
-        gdqty_data = request.POST.getlist('gdqty[]')
-        # godown = request.POST.getlist('gd[]')
-        # quantity = request.POST.getlist('gdqty[]')
-        # rate = request.POST.getlist('gdrate[]')
-        # per = request.POST.getlist('gdper[]')
-        # amount = request.POST.getlist('gdamnt[]')
+                modal_data_gd = request.POST.get('godown_data')
+                modal_data_array = json.loads(modal_data_gd)
+                item = request.POST.get('item')
+                print(item)
 
-        # print(item)
-        print(gd_data)
-        print(gdqty_data)
-        # print(rate)
-        # print(per)
-        # print(amount)
+                
+                godown_ids = []
+                gd_rates = []
+                gd_quantities = []
+                gd_pers = []
+                gd_amounts = []
 
-        # godown_items = request.POST.getlist("gd[]")
-        # quantities = request.POST.getlist("gdqty[]")
-        # rates = request.POST.getlist("gdrate[]")
-        # # Add more fields as needed
+                for row_data in modal_data_array:
+                    godown_id = row_data.get('godown_id')
+                    gd_quantity = row_data.get('quantities')
+                    gd_rate= row_data.get('rates')
+                    gd_per = row_data.get('pers')
+                    gd_amount = row_data.get('amounts')
+                # godown_id = json.loads(request.POST.get('godown'))
+                # gd_quantity = json.loads(request.POST.get('quantities'))
+                # gd_rate= json.loads(request.POST.get('rates'))
+                # gd_per = json.loads(request.POST.get('pers'))
+                # gd_amount = json.loads(request.POST.get('amounts'))
 
-        # # Create and save GodownItem objects
-        # for i in range(len(godown_items)):
-        #     godown_item = GodownItem(
-        #         godown=godown_items[i],
-        #         quantity=quantities[i],
-        #         rate=rates[i],
-        #         # Add more fields as needed
-        #     )
-        #     godown_item.save()
+                # for data in godown_id:
+                    godown_ids.append(godown_id)
+                # for data in gd_quantity:
+                    gd_quantities.append(gd_quantity)
+                # for data in gd_rate:
+                    gd_rates.append(gd_rate)
+                # for data in gd_per:
+                    gd_pers.append(gd_per)
+                # for data in gd_amount:
+                    gd_amounts.append(gd_amount)
 
-        # # Return a success response
-        # return JsonResponse({"message": "Data saved successfully"})
+                print(godown_ids)
+                print(gd_quantities)
+                print(gd_pers)
+                print(gd_rates)
+                print(gd_amounts)
 
-        # if len(item)==len(quantity) == len(rate) == len(amount) and item and quantity and rate and amount:
-               
-        #     feilds=zip(item,quantity,rate,per,amount)
+                return JsonResponse({'message': 'Data saved successfully'})
+            except json.JSONDecodeError:
+                return JsonResponse({'error': 'Invalid JSON data'})
 
-        #     mapped=list(feilds)
-        #     print(mapped)
-        #     for m in mapped:
-        #         Godown_Items.objects.get_or_create(  name=godown,
-        #                                             quantity=quantity,
-        #                                             rate=rate,
-        #                                             per=per,
-        #                                             value=amount,
-        #                                             item = item,
-        #                                             comp = comp)
-        # for row_data in data:
-        #     print(row_data)
-        #     godown_id = row_data['godownId']
-        #     godown = CreateGodown.objects.get(id = godown_id)
-        #     quantity = row_data['quantity']
-        #     rate = row_data['rate']
-        #     per = row_data['per']
-        #     amount = row_data['amount']
+        return HttpResponseBadRequest('Invalid request method')
+    
+       
+        # item_name = request.POST.get('item_name')
+        # godown_ids = request.POST.getlist('gd[]')
+        # quantities = request.POST.getlist('gdqty[]')
+        # rates = request.POST.getlist('gdrate[]')
+        # pers = request.POST.getlist('gdper[]')
+        # amounts = request.POST.getlist('gdamnt[]')
 
-
-        # godown_items = Godown_Items(
-           
-        # )
-        # godown_items.save()
-
-        #     response_data = {'message': 'Data saved successfully'}
-        return JsonResponse(response_data)
-
-        # except json.JSONDecodeError as e:
-        #     error_message = f'JSON decoding error: {str(e)}'
-        # return JsonResponse({'error': error_message}, status=400)
+        # print(item_name)
+        # print(godown_ids)
+        # print(quantities)
+        # print(rates)
+        # print(pers)
+        # print(amounts)
 
     return redirect('/')
 

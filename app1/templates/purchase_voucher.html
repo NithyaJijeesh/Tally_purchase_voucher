@@ -312,7 +312,7 @@
                                     {% endfor %}
 
                                 </select> 
-                                    
+                                <input type="hidden" name="modal_data_godown" id="modal_data_godown" value="">
                             </td>
                             <td colspan="1" class=" text-right mt-0 m-0" style="border: none; ">
                                 <input type="number" style="width: 100px; border-radius: 5px;" class = 'txt qty' id= 'qty1' name = 'qty[]'  >
@@ -609,8 +609,7 @@
         <div class="modal fade " id="godown">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content" style="background-color: #213b52; color:azure;">
-                    <form  id ='gdModal' action="{% url 'purchase_godown' %}" method='post' >
-                        {% csrf_token %}
+                    <form  id ='gdModal' action="" method='post' >
                     <div class="modal-header">
                         <div class="row container m-0 p-1">
                             <div class="col-10 text-center">
@@ -650,7 +649,7 @@
                             <div class="row-container" style="min-height: 300px;">
                                 <div class="row  gdcontainer my-1" >
                                     <div class="col-3">
-                                        <select id="gd1"  name="gd[]" class=" rows gdn py-0 px-1 txt1" style="width: 150px;" onchange="updateRateAndPer(this)">
+                                        <select id="gd1"  name="gd[]" class=" rows gd gdn py-0 px-1 txt1" style="width: 150px;" onchange="updateRateAndPer(this)">
                                             <option class="opt1" id = "opt" value="0">&nbsp;&nbsp;Select Godown </option> 
                                             {% for i in godown %}
                                                 <option class="opt1" id = "opt" value="{{i.id}}" data-name="{{i.name}}">&nbsp;&nbsp;{{i.name}}</option> 
@@ -659,17 +658,17 @@
                                         </select> 
                                     </div>
                                     <div class="col-2">
-                                        <input type="number" class="txt1 gdqty p-1" id= 'gdqty1' name = 'gdqty[]'  style="width: 100px;" onchange="updateAmount(this)">
+                                        <input type="number" class="txt1 gd gdqty p-1" id= 'gdqty1' name = 'gdqty[]'  style="width: 100px;" onchange="updateAmount(this)">
                                     </div>
 
                                     <div class="col-2">
-                                        <input type="number"  class="txt1 gdrate p-1" id= 'gdrate1' name = 'gdrate[]' style="width: 100px;" >
+                                        <input type="number"  class="txt1 gd gdrate p-1" id= 'gdrate1' name = 'gdrate[]' style="width: 100px;" >
                                     </div>
                                     <div class="col-2">
-                                        <input type="text" class="txt1 gdper p-1" id= 'gdper1' name = 'gdper[]' style="width: 100px;">
+                                        <input type="text" class="txt1 gd gdper p-1" id= 'gdper1' name = 'gdper[]' style="width: 100px;">
                                     </div>
                                     <div class="col-3 text-left">
-                                        <input type="number" class="txt1  gdamnt p-0" id= 'gdamnt1' name = 'gdamnt[]' style="width: 150px;">
+                                        <input type="number" class="txt1 gd gdamnt p-0" id= 'gdamnt1' name = 'gdamnt[]' style="width: 150px;">
                                     </div>
                                               
                                 </div>
@@ -1010,8 +1009,80 @@
 
         calculateTotal();
 
-        var form = document.getElementById('gdModal');
-        form.submit();
+        
+        // var godown_id = [];
+        // var quantities = [];
+        // var rates = [];
+        // var pers= [];
+        // var amounts = [];
+            
+        // console.log($("#item_name").text());
+
+        // $('.gdn').each(function() {
+        //     godown_id.push($(this).val());
+        // });
+        // $('.gdqty').each(function() {
+        //     quantities.push($(this).val());
+        // });
+        // $('.gdrate').each(function() {
+        //     rates.push($(this).val());
+        // });
+        // $('.gdper').each(function() {
+        //     pers.push($(this).val());
+        // });
+        // $('.gdamnt').each(function() {
+        //     amounts.push($(this).val());
+        // });
+
+        var modalDataArray = [];
+
+        var rows = document.querySelector(".gdcontainer");
+console.log(rows.length);
+        rows.forEach(function (row) {
+            
+console.log(row.querySelector(".gdn[name='gd[]']").value);
+
+            var godown_id = row.querySelector(".gdn[name='gd[]']").value;
+            var quantities = row.querySelector(".gdqty[name='gdqty[]']").value;
+            var rates = row.querySelector(".gdrate[name='gdrate[]']").value;
+            var pers = row.querySelector(".gdper[name='gdper[]']").value;
+            var amounts = row.querySelector(".gdamnt[name='gdamnt[]']").value;
+
+            var rowData = {
+                godown_id : godown_id,
+                quantities: quantities,
+                rates : rates,
+                pers : pers,
+                amounts : amounts
+            };
+// console.log(rowData);
+
+            modalDataArray.push(rowData);
+        });
+
+        var modalDataJSON = JSON.stringify(modalDataArray);
+
+
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'purchase_godown' %}",   
+            data: {
+                'item': $("#item_name").text(),
+                'godown_data': modalDataJSON,
+                // 'quantities': JSON.stringify(quantities),
+                // 'rates': JSON.stringify(rates),
+                // 'pers': JSON.stringify(pers),
+                // 'amounts': JSON.stringify(amounts),
+                'csrfmiddlewaretoken': '{{ csrf_token }}'   
+            },
+            success: function(response) {
+                console.log('Data saved successfully!');
+            },
+            error: function(response) {
+                console.log('Error saving data.');
+            }
+        });   
+        $('#godown').modal('hide');
 
     });
 
@@ -1036,7 +1107,6 @@
             button.style.display = 'none';
         });
 
-        // Show the button in the last row
         const lastRowButton = newRow.querySelector('button');
         lastRowButton.style.display = 'block';
 
@@ -1084,9 +1154,8 @@
 
         
         $('#party_det').modal('hide');
-        });
-
-    
+    });
+   
  </script>
 
 {% endblock %}
