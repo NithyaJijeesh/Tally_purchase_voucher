@@ -609,7 +609,7 @@
         <div class="modal fade " id="godown">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content" style="background-color: #213b52; color:azure;">
-                    <form  id ='gdModal' action="" method='post' >
+                    
                     <div class="modal-header">
                         <div class="row container m-0 p-1">
                             <div class="col-10 text-center">
@@ -627,7 +627,10 @@
                     </div>
 
                     <div class="modal-body" style="width: auto;">
-                        
+                        <form  id ='gdModal' action="" method='post' >
+                            {% csrf_token %}
+                            <input type="hidden" id="item_n" name="item_n">
+
                             <div class="row px-5 py-0">
                                 <div class="col-3 text-center">
                                     Godown
@@ -649,7 +652,7 @@
                             <div class="row-container" style="min-height: 300px;">
                                 <div class="row  gdcontainer my-1" >
                                     <div class="col-3">
-                                        <select id="gd1"  name="gd[]" class=" rows gd gdn py-0 px-1 txt1" style="width: 150px;" onchange="updateRateAndPer(this)">
+                                        <select id="gd1" name="gd[]" class=" rows gd gdn py-0 px-1 txt1" style="width: 150px;" onchange="updateRateAndPer(this)">
                                             <option class="opt1" id = "opt" value="0">&nbsp;&nbsp;Select Godown </option> 
                                             {% for i in godown %}
                                                 <option class="opt1" id = "opt" value="{{i.id}}" data-name="{{i.name}}">&nbsp;&nbsp;{{i.name}}</option> 
@@ -688,15 +691,22 @@
                                     <input type="number" class="txt1  tot_amnt p-1" id= 'tot_amnt' name = 'tot_amnt' style="width: 150px;">
                                 </div>
                             </div>
+                            <div class="row mt-5">
+                                <div class="col-4"> </div>
+                                <div class="col-2"> <button type="submit" class="btn btn-block text-uppercase text-shadow "
+                                    data-dismiss="modal" id="saveGodown" onclick="submitForm()" >
+                                    SAVE
+                                </button></div>
+                                <div class="col-4">
+                                </div>
+                            </div>
+                            
+                        </form>
+                    </div>
+                    <!-- <div class="modal-footer justify-content-center p-1">
                         
                     </div>
-                    <div class="modal-footer justify-content-center p-1">
-                        <button type="submit" class="btn btn-block text-uppercase text-shadow "
-                            data-dismiss="modal" id="saveGodown" >
-                            SAVE
-                        </button>
-                    </div>
-                </form>
+                 -->
                 </div>
             </div>
         </div>
@@ -713,6 +723,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.3.min.js" ></script>
+ 
 
     
 <script>
@@ -892,6 +903,7 @@
         var blnct4 = selectedOption.data("amount");
 
         $("#item_name").text(blnc1);
+        $("#item_n").val(blnc1);
         $("#row_number").text(rowNumber);
 
         $("#rate" + rowNumber).val(blnct1);
@@ -1008,82 +1020,7 @@
         });
 
         calculateTotal();
-
-        
-        // var godown_id = [];
-        // var quantities = [];
-        // var rates = [];
-        // var pers= [];
-        // var amounts = [];
-            
-        // console.log($("#item_name").text());
-
-        // $('.gdn').each(function() {
-        //     godown_id.push($(this).val());
-        // });
-        // $('.gdqty').each(function() {
-        //     quantities.push($(this).val());
-        // });
-        // $('.gdrate').each(function() {
-        //     rates.push($(this).val());
-        // });
-        // $('.gdper').each(function() {
-        //     pers.push($(this).val());
-        // });
-        // $('.gdamnt').each(function() {
-        //     amounts.push($(this).val());
-        // });
-
-        var modalDataArray = [];
-
-        var rows = document.querySelector(".gdcontainer");
-console.log(rows.length);
-        rows.forEach(function (row) {
-            
-console.log(row.querySelector(".gdn[name='gd[]']").value);
-
-            var godown_id = row.querySelector(".gdn[name='gd[]']").value;
-            var quantities = row.querySelector(".gdqty[name='gdqty[]']").value;
-            var rates = row.querySelector(".gdrate[name='gdrate[]']").value;
-            var pers = row.querySelector(".gdper[name='gdper[]']").value;
-            var amounts = row.querySelector(".gdamnt[name='gdamnt[]']").value;
-
-            var rowData = {
-                godown_id : godown_id,
-                quantities: quantities,
-                rates : rates,
-                pers : pers,
-                amounts : amounts
-            };
-// console.log(rowData);
-
-            modalDataArray.push(rowData);
-        });
-
-        var modalDataJSON = JSON.stringify(modalDataArray);
-
-
-        $.ajax({
-            type: 'POST',
-            url: "{% url 'purchase_godown' %}",   
-            data: {
-                'item': $("#item_name").text(),
-                'godown_data': modalDataJSON,
-                // 'quantities': JSON.stringify(quantities),
-                // 'rates': JSON.stringify(rates),
-                // 'pers': JSON.stringify(pers),
-                // 'amounts': JSON.stringify(amounts),
-                'csrfmiddlewaretoken': '{{ csrf_token }}'   
-            },
-            success: function(response) {
-                console.log('Data saved successfully!');
-            },
-            error: function(response) {
-                console.log('Error saving data.');
-            }
-        });   
-        $('#godown').modal('hide');
-
+ 
     });
 
 
@@ -1151,11 +1088,27 @@ console.log(row.querySelector(".gdn[name='gd[]']").value);
 
         var modalDataJSON = JSON.stringify(modalData);
         document.getElementById("modal_data_party").value = modalDataJSON;
-
-        
+       
         $('#party_det').modal('hide');
     });
+
+    function submitForm() {
+         var formData = $('#gdModal').serialize();
+          $.ajax({
+            type: 'POST',  
+            url: '{% url "purchase_godown" %}',  
+            data: formData,
+            success: function(response) {
+                 console.log('Form submitted successfully');
+                 $('#godown').modal('hide');
+            },
+            error: function(error) {
+                 console.error('Error submitting form:', error);
+            }
+        });
+    }
    
- </script>
+</script>
+
 
 {% endblock %}

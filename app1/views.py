@@ -16796,10 +16796,10 @@ def create_journal_voucher(request):
             part_ledg = request.POST.getlist("pled[]")
             part_ledg_type = request.POST.getlist("pledt[]")         
             debits =request.POST.getlist("debit_amnt[]")
-            credits = 0 if request.POST.getlist("credit_amnt[]") is "No" else request.POST.getlist("credit_amnt[]")
+            credits = 0 if request.POST.getlist("credit_amnt[]") is None else request.POST.getlist("credit_amnt[]")
             # print(particulars_id)
-            print(part_ledg)
-            print(part_ledg_type)
+            # print(part_ledg)
+            # print(part_ledg_type)
             vouch = Voucher.objects.get(company = comp,voucher_type = 'Journal',voucher_name = name)
             
             if debit == credit:
@@ -18537,6 +18537,7 @@ def trialbalance_voucher_alter(request,pk):
     return render(request,'trialbalance_voucher_alter.html',context)  
 
 
+#--------------Purchase Voucher -----Nithya----
 
 def list_purchase_voucher(request):
     if 't_id' in request.session:
@@ -18547,13 +18548,7 @@ def list_purchase_voucher(request):
         tally = Companies.objects.filter(id=t_id)
         comp = Companies.objects.get(id = t_id)
         ledger = tally_ledger.objects.filter(company_id = comp)
-        # for i in range(len(ledger)):
-            
-        #     if ledger[i].current_blnc is None:
-        #         ledger[i].current_blnc = ledger[i].opening_blnc
-        #         ledger[i].current_blnc_type = ledger[i].opening_blnc_type
 
-        #         ledger[i].save()
         
         voucher = Voucher.objects.filter(voucher_type = 'Purchase',company = comp)
         context = {
@@ -18575,7 +18570,6 @@ def purchase_vouchers(request):
         comp = Companies.objects.get(id = t_id)
     
         name = request.POST.get('ptype')
-        # print(name)
      
         vouch = Voucher.objects.filter(voucher_type = 'Purchase',company = comp).get(voucher_name = name)
         st_item = stock_itemcreation.objects.filter(company = comp)
@@ -18743,6 +18737,7 @@ def getaccdetails(request):
 
 from django.http import HttpResponseBadRequest
 
+
 def purchase_godown(request):
     if 't_id' in request.session:
         if request.session.has_key('t_id'):
@@ -18752,70 +18747,43 @@ def purchase_godown(request):
         comp = Companies.objects.get(id = t_id)
 
         if request.method == 'POST':
-            try:
+            item_name = request.POST.get('item_n')
+            godown_data = request.POST.getlist('gd[]')   
+            gdqty_data = request.POST.getlist('gdqty[]')
+            gdrate_data = request.POST.getlist('gdrate[]')
+            gdper_data = request.POST.getlist('gdper[]')
+            gdamnt_data = request.POST.getlist('gdamnt[]')
 
-                modal_data_gd = request.POST.get('godown_data')
-                modal_data_array = json.loads(modal_data_gd)
-                item = request.POST.get('item')
-                print(item)
+            for i in range(len(godown_data)):
 
-                
-                godown_ids = []
-                gd_rates = []
-                gd_quantities = []
-                gd_pers = []
-                gd_amounts = []
+                gd_name = CreateGodown.objects.get(id = godown_data[i]).name
+                try:
+                    # Try to get the record that matches the conditions
+                    existing_record = Godown_Items.objects.get(comp=comp, item=item_name, name=gd_name)
+                    
+                    # If a record exists, update it
+                    existing_record.quantity = str(int(existing_record.quantity) + int(gdqty_data[i]))
+                    existing_record.value = str(int(existing_record.value) + int(gdamnt_data[i]))
+                    existing_record.save()
+                    print('yes')
 
-                for row_data in modal_data_array:
-                    godown_id = row_data.get('godown_id')
-                    gd_quantity = row_data.get('quantities')
-                    gd_rate= row_data.get('rates')
-                    gd_per = row_data.get('pers')
-                    gd_amount = row_data.get('amounts')
-                # godown_id = json.loads(request.POST.get('godown'))
-                # gd_quantity = json.loads(request.POST.get('quantities'))
-                # gd_rate= json.loads(request.POST.get('rates'))
-                # gd_per = json.loads(request.POST.get('pers'))
-                # gd_amount = json.loads(request.POST.get('amounts'))
+                except Godown_Items.DoesNotExist:
+                    # If no record exists, create a new one
+                    print('no')
+                    godown_items = Godown_Items(
+                        comp=comp,
+                        item=item_name,
+                        name=gd_name,
+                        quantity=gdqty_data[i],
+                        rate=gdrate_data[i],
+                        per=gdper_data[i],
+                        value=gdamnt_data[i]
+                        
+                    )
+                    godown_items.save()
 
-                # for data in godown_id:
-                    godown_ids.append(godown_id)
-                # for data in gd_quantity:
-                    gd_quantities.append(gd_quantity)
-                # for data in gd_rate:
-                    gd_rates.append(gd_rate)
-                # for data in gd_per:
-                    gd_pers.append(gd_per)
-                # for data in gd_amount:
-                    gd_amounts.append(gd_amount)
+            return JsonResponse({'message': 'Data saved successfully'})
 
-                print(godown_ids)
-                print(gd_quantities)
-                print(gd_pers)
-                print(gd_rates)
-                print(gd_amounts)
-
-                return JsonResponse({'message': 'Data saved successfully'})
-            except json.JSONDecodeError:
-                return JsonResponse({'error': 'Invalid JSON data'})
-
-        return HttpResponseBadRequest('Invalid request method')
-    
-       
-        # item_name = request.POST.get('item_name')
-        # godown_ids = request.POST.getlist('gd[]')
-        # quantities = request.POST.getlist('gdqty[]')
-        # rates = request.POST.getlist('gdrate[]')
-        # pers = request.POST.getlist('gdper[]')
-        # amounts = request.POST.getlist('gdamnt[]')
-
-        # print(item_name)
-        # print(godown_ids)
-        # print(quantities)
-        # print(rates)
-        # print(pers)
-        # print(amounts)
-
-    return redirect('/')
+        return JsonResponse({'message': 'Invalid request method'}, status=400)
 
 #------- End of Purchase Vouchers----

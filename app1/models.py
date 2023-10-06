@@ -663,8 +663,6 @@ class Particular(models.Model):#ann Particular table
 
 
 # Niyas
-
-
 class Godown_Items(models.Model):
     comp=models.ForeignKey(Companies,on_delete=models.CASCADE)
     item  =models.CharField(max_length=100,null=True,blank=True)
