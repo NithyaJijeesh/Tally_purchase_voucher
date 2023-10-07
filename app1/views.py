@@ -16733,40 +16733,49 @@ def journal_vouchers(request):
         return render(request,'journal_voucher.html',context)
         
 def journal_pcur_balance_change(request):
-    
-    ac = request.GET.get('pac')
-    i = request.GET.get('curblnc')
-    j = request.GET.get('amount')
-    type = request.GET.get('curblnct')
-    # print(ac)
-    # print(i)
-    # print(j)
-    # print(type)
-    # updated by Nithya
-    if type == 'Cr':
-        v2 = int(i)- int(j)
-        if v2 < 0:
-            val = abs(v2)
-            cur_type = 'Dr'
+
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
         else:
-            val = v2
-            cur_type = 'Cr'
-    else:
-        val = int(i) + int(j)
-        cur_type = 'Dr'
-    # val = int(i) + int(j)
+            return redirect('/')
 
-    ledger = tally_ledger.objects.get(id = ac)
-    fixed_curbal = ledger.current_blnc
-    fixed_curbal_type = ledger.current_blnc_type
-    # ledger.current_blnc = val
-    # # print(ledger.current_blnc)
+        comp = Companies.objects.get(id = t_id)
+        if request.method=='POST':
 
-    # ledger.current_blnc_type = type
-    # ledger.save()
+            ac = request.POST.get('pac')
+            i = request.POST.get('curblnc')
+            # j = request.GET.get('amount')
+            type = request.POST.get('curblnct')
+            # print(ac)
+            print(i)
+            # print(j)
+            # print(type)
+            # updated by Nithya
+            # if type == 'Cr':
+            #     v2 = int(i)- int(j)
+            #     if v2 < 0:
+            #         val = abs(v2)
+            #         cur_type = 'Dr'
+            #     else:
+            #         val = v2
+            #         cur_type = 'Cr'
+            # else:
+            #     val = int(i) + int(j)
+            #     cur_type = 'Dr'
+            # # val = int(i) + int(j)
 
-    
-    return render(request,'journal_pcurbalance_change.html', {'val' : val,'cur_type': type, 'fix_cur':fixed_curbal,'fix_curtype' : fixed_curbal_type, 'ledger' : ledger })
+            ledger = tally_ledger.objects.get(id = ac)
+            fixed_curbal = ledger.current_blnc
+            fixed_curbal_type = ledger.current_blnc_type
+            ledger.current_blnc = i
+            # # print(ledger.current_blnc)
+
+            ledger.current_blnc_type = type
+            ledger.save()
+
+            
+            return render(request,'journal_pcurbalance_change.html', {'val' : i,'cur_type': type, 'fix_cur':fixed_curbal,'fix_curtype' : fixed_curbal_type, 'ledger' : ledger })
     
     
 def create_journal_voucher(request):
@@ -18758,17 +18767,14 @@ def purchase_godown(request):
 
                 gd_name = CreateGodown.objects.get(id = godown_data[i]).name
                 try:
-                    # Try to get the record that matches the conditions
                     existing_record = Godown_Items.objects.get(comp=comp, item=item_name, name=gd_name)
                     
-                    # If a record exists, update it
                     existing_record.quantity = str(int(existing_record.quantity) + int(gdqty_data[i]))
                     existing_record.value = str(int(existing_record.value) + int(gdamnt_data[i]))
                     existing_record.save()
                     print('yes')
 
                 except Godown_Items.DoesNotExist:
-                    # If no record exists, create a new one
                     print('no')
                     godown_items = Godown_Items(
                         comp=comp,
