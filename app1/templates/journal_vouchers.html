@@ -199,6 +199,29 @@
 
                                 </div>
 
+                                <!-- <div class="account"
+                                    style="color: #000;font-weight:500 ;text-transform:capitalize; font-size: 18px;">
+                                    <span class='input-group'>
+                                        <label>&nbsp;&nbsp;Account&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</label> 
+
+
+                                        <select hidden id="debit" name="acc" class=" acc rows m-0 p-0"
+                                            style="width: 150px; border-radius: 5px;">
+                                            <option class="opt" id="opt">&nbsp;&nbsp;Select Account </option>
+                                            {% for i in ledg %}
+                                            <option class="opt" id="opt" name='opt'
+                                                value="{{i.id}} {{i.name}} {{i.under}}">&nbsp;&nbsp;{{i.name}}</option>
+                                            {% endfor %}
+
+                                        </select>
+                                    </span>
+                                    <span class="input-group">
+                                        <label>&nbsp;&nbsp;Current Balance :&nbsp;&nbsp;</label>
+                                        <label id='curbalance'></label>
+
+                                    </span>
+                                </div> -->
+
                             </th>
                             <th colspan="10" class="text-right mt-0" style="border-bottom: solid 0.5px rgba(255, 255, 255, .2);
                             border-left:none ; color: #000;">
@@ -237,24 +260,13 @@
                                         style="width: 150px; border-radius: 5px;" onchange="changeCurbalance(this);">
                                         <option class="opt" id="opt">&nbsp;&nbsp;Select Particular </option>
                                         {% for i in ledg_all %}
-                                        <option class="opt" id="opt" value="{{i.id}}"
-                                        data-balance ="{{i.current_blnc}}"
-                                        data-balancet="{{i.current_blnc_type}}">&nbsp;&nbsp;{{i.name}}</option>
+                                        <option class="opt" id="opt" value="{{i.id}}">&nbsp;&nbsp;{{i.name}}</option>
                                         {% endfor %}
 
                                     </select> <br>
-                                    <span class="input-group jur_curbalance d-none"> 
-                                        <label class="text-dark">&nbsp;&nbsp;Current Balance &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</label>
-                                        <input type="number" class = 'txt m-0 p-0' style="width: 150px; border-radius: 5px;" id= 'jur_curblnc' name = 'party_curblnc'>&nbsp;
-                                        <input type="text" class = 'txt m-0 p-0' style="width: 50px; border-radius: 5px;" id= 'jur_curblnct' name = 'party_curblnct'> 
-                                    </span>
-                                    <span class="input-group"> <!--change to d-none-->
-                                        <input type="number" class = 'txt m-0 p-0' style="width: 150px; border-radius: 5px;" id= 'fix_curblnc' name = 'party_curblnc'>&nbsp;
-                                        <input type="text" class = 'txt m-0 p-0' style="width: 50px; border-radius: 5px;" id= 'fix_curblnct' name = 'party_curblnct'> 
-                                    </span>
-                                    <!-- <label class='blnc1 ' style="color: #000; margin-left: 40px;">&nbsp;&nbsp;Cur
+                                    <label class='blnc1 ' style="color: #000; margin-left: 40px;">&nbsp;&nbsp;Cur
                                         Bal:&nbsp;&nbsp;</label>
-                                    <label class='blnc1' id="blnc1" class="p-0 mt-0" style="color: #000;"></label> -->
+                                    <label class='blnc1' id="blnc1" class="p-0 mt-0" style="color: #000;"></label>
                                     <label id='onacc1' class="onacc" name='onacc'
                                         style="color: #000; margin-left: 25px;"></label>
                                 </td>
@@ -333,62 +345,33 @@
 
     function changeCurbalance(id) {
 
-        // const ids = $(".payacc").length;
-        // const parid = $('#debit' + ids).val();
-        // // console.log(ids);
-        // // console.log(parid);
+        const ids = $(".payacc").length;
+        const parid = $('#debit' + ids).val();
+        // console.log(ids);
+        // console.log(parid);
 
-        // $.ajax({
-        //     url: '{% url "cur_balance" %}',
-        //     data: {
-        //         'id': parid
-        //     },
+        $.ajax({
+            url: '{% url "cur_balance" %}',
+            data: {
+                'id': parid
+            },
 
-        //     success: function (data) {
+            success: function (data) {
 
-        //         if (data[0].current_blnc_type == 'Dr') {
+                if (data[0].current_blnc_type == 'Dr') {
 
-        //             curData1 = '<input id ="pled'+ids +'" +  class= "txt" readonly value = ' + data[0].current_blnc + ' name = pled[]> <input id ="pledt'+ids +'" name = pledt[] class= "txt" readonly value = ' + data[0].current_blnc_type + '> <input id ="fixed_pled'+ids +'" +  class= "txt" readonly value = ' + data[0].current_blnc + '> <input id ="fixed_pledt'+ids +'" class= "txt" readonly value = ' + data[0].current_blnc_type + '>';
-        //         }
-        //         else {
-        //             curData1 = '<input id ="pled'+ids +'" class= "txt" readonly value = ' + data[0].current_blnc + ' name = pled[] style="color: red;"> <input id ="pledt'+ids +'" name = pledt[] style="color: red;"  class= "txt" readonly value = ' + data[0].current_blnc_type + '> <input id ="fixed_pled'+ids +'" class= "txt" readonly value = ' + data[0].current_blnc + ' style="color: red;"> <input id ="fixed_pledt'+ids +'" style="color: red;"  class= "txt" readonly value = ' + data[0].current_blnc_type + '>';
-        //         }
-        //         $("#blnc" + ids).html(curData1);
-        //         calculateTotalCredit();
-        //     }
+                    curData1 = '<input id ="pled'+ids +'" +  class= "txt" readonly value = ' + data[0].current_blnc + ' name = pled[]> <input id ="pledt'+ids +'" name = pledt[] class= "txt" readonly value = ' + data[0].current_blnc_type + '> <input id ="fixed_pled'+ids +'" +  class= "txt" readonly value = ' + data[0].current_blnc + '> <input id ="fixed_pledt'+ids +'" class= "txt" readonly value = ' + data[0].current_blnc_type + '>';
+                }
+                else {
+                    curData1 = '<input id ="pled'+ids +'" class= "txt" readonly value = ' + data[0].current_blnc + ' name = pled[] style="color: red;"> <input id ="pledt'+ids +'" name = pledt[] style="color: red;"  class= "txt" readonly value = ' + data[0].current_blnc_type + '> <input id ="fixed_pled'+ids +'" class= "txt" readonly value = ' + data[0].current_blnc + ' style="color: red;"> <input id ="fixed_pledt'+ids +'" style="color: red;"  class= "txt" readonly value = ' + data[0].current_blnc_type + '>';
+                }
+                $("#blnc" + ids).html(curData1);
+                calculateTotalCredit();
+            }
 
-        // });
-
-        $(".jur_curbalance").removeClass("d-none");
-        $(".jur_curbalance").add("d-flex");
+        });
 
 
-        var selectedOption = $("#debit1 option:selected");
-        
-        var blnc = selectedOption.data("balance");
-        var blnct = selectedOption.data("balancet");
-
-        if (blnct == 'Cr'){
-            $("#jur_curblnc").val(blnc);
-            $("#jur_curblnct").val(blnct);
-
-            $("#fix_curblnc").val(blnc);
-            $("#fix_curblnct").val(blnct);
-
-            $("#jur_curblnc").css("color", "red");
-            $("#jur_curblnct").css("color", "red");
-        }
-        else{
-            $("#jur_curblnc").val(blnc);
-            $("#jur_curblnct").val(blnct);
-
-            $("#fix_curblnc").val(blnc);
-            $("#fix_curblnct").val(blnct);
-
-            $("#jur_curblnc").css("color", "");
-            $("#jur_curblnct").css("color", ""); 
-        }
-        calculateTotalCredit();
     }
 
     function showTransaction(){

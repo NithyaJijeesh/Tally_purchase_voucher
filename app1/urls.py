@@ -955,7 +955,7 @@ urlpatterns = [
     path('purchase_vouchers',views.purchase_vouchers,name='purchase_vouchers'),
     path('create_purchase_voucher' , views.create_purchase_voucher,name='create_purchase_voucher'),                   
     path('getaccdetails' , views.getaccdetails,name='getaccdetails'),  
-    path('purchase_godown' , views.purchase_godown,name='purchase_godown'),                 
+    path('purchase_godown' , views.purchase_godown,name='purchase_godown'),        
 
     #------- End of Purchase Vouchers----
     

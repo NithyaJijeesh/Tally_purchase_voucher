@@ -309,14 +309,14 @@
                                                         <li>
                                                             <a href="{% url 'selectledgerpage' %}">Ledger Analysis</a>
                                                         </li>
-                                                        <li>
+                                                        <!-- <li>
                                                             <a data-toggle="modal" data-target="#myModal" href="javascript:;" class="has-arrow">
                                 
                                         
                                                                 <div class="menu-title">Date</div>
                                                             </a>
                                                             
-                                                            </li>
+                                                            </li> -->
                                                             <li>
                                                                 <a data-toggle="modal" data-target="#myModal1" href="javascript:;" class="has-arrow">
                                     
@@ -916,7 +916,7 @@
                             
                         </li> -->
                         <li>
-                            <a data-toggle="modal" data-target="#myModal" href="javascript:;" class="has-arrow">
+                            <a data-toggle="modal" data-target="#dateModal" href="javascript:;" class="has-arrow">
 
                                 <div class="parent-icon"><i class='bx bx-briefcase-alt'></i>
                                 </div>
@@ -1026,24 +1026,24 @@
         </div>
 <!-- end wrapper -->
 
-
-    <div class="modal fade" id="myModal" role="dialog" style="margin-top: 150px;">
+    <div class="modal fade" id="dateModal" role="dialog" style="margin-top: 150px;">
         <div class="modal-dialog">
-        <div class="modal-content">
-        <div class="modal-body">
-        <form action="" id="frmDate" method="POST" >
-        {% csrf_token %}
-            <div class="form-group" align="center" id="mdlSubmit">
-                <input type="date" name="currentdate" id="enterDate" placeholder="Date" class="form-control w-50"><br>
-                <input type="hidden" id="hdnDate" value="0">
-                <input type="hidden" id="hdnDateVal" value="0">
-                <button class="btn btn-small w-25 btn btn-info" data-dismiss="modal" aria-hidden="true" onclick="setDate()">Submit</button> 
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form action="" id="frmDate" method="POST" >
+                    {% csrf_token %}
+                        <div class="form-group" align="center" id="mdlSubmit">
+                            <input type="date" name="currentdate" id="enterDate" placeholder="Date" class="form-control w-50"><br>
+                            <input type="hidden" id="hdnDate" value="0">
+                            <input type="hidden" id="hdnDateVal" value="0">
+                            <button class="btn btn-small w-25 btn btn-info" data-dismiss="modal" aria-hidden="true" onclick="setDate()">Submit</button> 
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
         </div>
-        </div>
-        </div>
-        </div> <!--end of modal-->
+    </div>
+     <!--end of modal-->
     <!--starting of modal-->
     <div class="modal fade" id="myModal1" role="dialog" style="margin-top: 150px;">
         <div class="modal-dialog">
