@@ -50,8 +50,9 @@
                             
                         </div>
                         <div class="col-sm-6" style="text-align: right;">
-                            <h6>{{financial_year}}</h6>
-                            <h6>{{dt_nm}}</h6>
+                            <h6 id="datenew">{{date1 | date:'d-M-Y'}}</h6>
+                            <h6 id="daynew">{{date1 | date:'l'}}</h6>
+                            <input type="hidden" name = 'date1' id="date1" value="{{date1|date:'Y-m-d'}}">
                         </div>
                     </div>
                     <div class="row">
@@ -635,6 +636,48 @@
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
     <script>
+
+// *----------------------date setting modal from base.html----------------------------------
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const openModalBtn = document.getElementById('openModalBtn');
+        function openModal() {
+            const modal = document.getElementById('dateModal');
+            modal.style.display = 'block';
+        }
+
+        openModalBtn.addEventListener('click', openModal);
+    });
+
+    function setDate(){
+        const modal = document.getElementById('dateModal');
+        modal.style.display = 'block';
+        const dateObj = new Date(document.getElementById('enterDate').value);
+
+        const year1 = dateObj.getFullYear();
+        const month1 = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const day1 = String(dateObj.getDate()).padStart(2, '0');
+
+        document.getElementById("date1").value= year1 + '-' + month1 + '-' + day1
+
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const monthAbbreviations = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const month = monthAbbreviations[dateObj.getMonth()];
+        const year = dateObj.getFullYear();
+        const formattedDate = day + '-' + month + '-' + year;
+
+        const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const dayOfWeek = daysOfWeek[dateObj.getDay()];
+
+        document.getElementById("datenew").innerHTML = formattedDate;
+        document.getElementById("daynew").innerHTML = dayOfWeek;
+    }
+// *----------------------end of date setting modal from base.html----------------------------------
+
+
+
+
         $(document).ready(function () {
             var i = 1;
             $("#add_row").click(function () {
@@ -871,7 +914,7 @@
                     amount = response.amount
                     document.getElementById('rates').value = amount;
                     // document.getElementById('unit13').value = amount;
-                //    
+                
 
             }});  
         }
@@ -1604,7 +1647,7 @@
 
 </script>
 
-// <div id="myModal" class="modal fade">
+<!-- // <div id="myModal" class="modal fade">
 //     <div class="modal-dialog">
 //         <div class="modal-content">
 //             <div class="modal-header">
@@ -1631,10 +1674,10 @@
 //             </div>
 //         </div>
 //     </div>
-// </div>
+// </div> -->
 
 
-// <script>
+<script>
 
 
 // jQuery(document).ready(function(){
@@ -1649,12 +1692,11 @@
 // sessionStorage.setItem('story','');
 // });
 // });
-// </script>
 
-<!-- <script>
-    const name = localStorage.getItem("type");
-    console.log(name);
-</script> -->
+
+    // const name = localStorage.getItem("type");
+    // console.log(name);
+</script> 
 
 
 

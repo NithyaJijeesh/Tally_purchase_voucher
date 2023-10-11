@@ -13902,8 +13902,6 @@ def create_receipt_voucher(request):
         return redirect('/list_receipt_voucher')
 
 
-
-
 def cur_balance(request):
 
     if 't_id' in request.session:
@@ -13918,9 +13916,6 @@ def cur_balance(request):
         ledger = tally_ledger.objects.values().filter(id = i,company = comp)
         data = list(ledger)
         return JsonResponse(data, safe = False)
-
-
-
 
 def cur_balance_change(request):
 
@@ -13975,7 +13970,6 @@ def pcur_balance_change(request):
         i = request.GET.get('curblnc')
         j = request.GET.get('amount')
         type = request.GET.get('curblnct')
-        print(ac)
         
         if type == 'Cr':
             v2 = int(i)- int(j)
@@ -14179,7 +14173,7 @@ def credit_notess(request):
     next_year = current_year+1
     previous_year = current_year-1
     financial_year="01-Apr-"+str(previous_year)
-
+    
     now = datetime.now()
     dt_nm=now.strftime("%A")
 
@@ -14202,7 +14196,7 @@ def credit_notess(request):
     ldg1=tally_ledger.objects.filter(company=cmp1,under="Sales_Account")
     item = stock_itemcreation.objects.filter(company = cmp1)
     godown = Godown_Items.objects.filter(comp=cmp1) 
-    context = {'tally':tally,'cmp1': cmp1,'item':item,'ldg':ldg,"ldg1":ldg1,"crd_num":crd_num,"financial_year":financial_year,"dt_nm":dt_nm,"godown":godown, "setup_no":setup_no,"setup_nar":setup_nar,'now':now,'name':name} 
+    context = {'tally':tally,'cmp1': cmp1,'item':item,'date1' : date.today(),'ldg':ldg,"ldg1":ldg1,"crd_num":crd_num,"financial_year":financial_year,"dt_nm":dt_nm,"godown":godown, "setup_no":setup_no,"setup_nar":setup_nar,'now':now,'name':name} 
     return render(request,'credit_note.html',context)
 
 def itemdata(request):
@@ -14363,10 +14357,11 @@ def create_credit(request):
             name = request.POST.get('type')
             cust = request.POST['customer']
             ledg = request.POST['ledger_account']
-            # print(name)
+            dates = request.POST['date1']
+
             vouch = Voucher.objects.filter(voucher_type = 'Credit_Note',company = cmp1).get(voucher_name = name)
             
-            created = credit_note.objects.filter(screditid=idss.screditid).update(voucher = vouch,customer = cust,creditdate=date.today(),ledger_acc=ledg,subtotal=request.POST['subtotal'],note=notes,quantity=request.POST['quantity'],grandtotal=request.POST['grandtotal'],)
+            created = credit_note.objects.filter(screditid=idss.screditid).update(voucher = vouch,customer = cust,creditdate=dates,ledger_acc=ledg,subtotal=request.POST['subtotal'],note=notes,quantity=request.POST['quantity'],grandtotal=request.POST['grandtotal'],)
            
     
             pdebit=credit_note.objects.get(screditid=idss.screditid)
@@ -14421,7 +14416,7 @@ def create_credit(request):
                     
                     outwards_value =int(ele[1]) * int(ele[2]) 
                     outwards_val = outwards_value 
-                    stock_item_voucher.objects.get_or_create(company = cmp1,group = grp,item = item,date = date.today(),
+                    stock_item_voucher.objects.get_or_create(company = cmp1,group = grp,item = item,date = dates,
                                                              Particulars = cust,ledger_account = ledg,Voucher_type = name,
                                                              Voucher_no=idss.screditid,rate = ele[2],per = item.per,
                                                              outwards_qty = ele[1],outwards_val = outwards_val,
@@ -14926,7 +14921,7 @@ def debits_note(request):
     item = stock_itemcreation.objects.filter(company = cmp1)
     godown = Godown_Items.objects.filter(comp=cmp1) 
     # print(ldg1)
-    context = {'tally':tally,'cmp1': cmp1,'item':item,'ldg':ldg,"ldg1":ldg1,"crd_num":crd_num,"financial_year":financial_year,"dt_nm":dt_nm,"godown":godown, "setup_no":setup_no,"setup_nar":setup_nar,'now':now,'name':name} 
+    context = {'tally':tally,'cmp1': cmp1,'item':item,'ldg':ldg,"ldg1":ldg1,"crd_num":crd_num,'date1' : date.today(),"financial_year":financial_year,"dt_nm":dt_nm,"godown":godown, "setup_no":setup_no,"setup_nar":setup_nar,'now':now,'name':name} 
     return render(request,'debit_note.html',context)
 
 
@@ -14957,10 +14952,11 @@ def create_debit(request):
             name = request.POST.get('type')
             cust = request.POST['customer']
             ledg = request.POST['ledger_account']
+            dates = request.POST['date1']
             # print(name)
             vouch = Voucher.objects.filter(voucher_type = 'Debit_Note',company = cmp1).get(voucher_name = name)
          
-            created = debit_note.objects.filter(sdebitid=idss.sdebitid).update(voucher = vouch,customer = cust,debitdate=date.today(),ledger_acc=ledg,subtotal=request.POST['subtotal'],note=notes,quantity=request.POST['quantity'],grandtotal=request.POST['grandtotal'],)
+            created = debit_note.objects.filter(sdebitid=idss.sdebitid).update(voucher = vouch,customer = cust,debitdate=dates,ledger_acc=ledg,subtotal=request.POST['subtotal'],note=notes,quantity=request.POST['quantity'],grandtotal=request.POST['grandtotal'],)
             
             # sumayya-----voucher numbering------------------------
             voucher = Voucher.objects.get(company = cmp1,voucher_type = 'Debit_Note',voucher_name = name)
@@ -15030,7 +15026,7 @@ def create_debit(request):
                     
                     inwards_value =int(ele[1]) * int(ele[2])
                     inwards_val = inwards_value 
-                    stock_item_voucher.objects.get_or_create(company = cmp1,group = grp,item = item,date = date.today(),
+                    stock_item_voucher.objects.get_or_create(company = cmp1,group = grp,item = item,date = dates,
                                                              Particulars = cust,ledger_account = ledg,Voucher_type = name,
                                                              Voucher_no=idss.sdebitid,rate = ele[2],per = item.per,
                                                              inwards_qty = ele[1],inwards_val = inwards_val,
@@ -15921,11 +15917,7 @@ def create_contra_voucher(request):
             particulars = request.POST.getlist("acc[]")
             particulars_id = request.POST.getlist("accid[]")
             amounts = request.POST.getlist("amnt[]")
-        # print(particulars)
-        # print(particulars_id)
-        # print(amounts)
 
-            
         contra_voucher(cid = cid,account = acc,date = date1 , amount = amount , narration = nrt ,voucher = vouch,company = comp).save()
         # sumayya----voucher numbering---
         voucher = Voucher.objects.get(company = comp,voucher_type = 'Contra',voucher_name = name)
@@ -16745,37 +16737,43 @@ def journal_pcur_balance_change(request):
 
             ac = request.POST.get('pac')
             i = request.POST.get('curblnc')
-            # j = request.GET.get('amount')
+            j = request.POST.get('amount')
             type = request.POST.get('curblnct')
-            # print(ac)
+            print(ac)
             print(i)
-            # print(j)
-            # print(type)
+            print(j)
+            print(type)
+
             # updated by Nithya
-            # if type == 'Cr':
-            #     v2 = int(i)- int(j)
-            #     if v2 < 0:
-            #         val = abs(v2)
-            #         cur_type = 'Dr'
-            #     else:
-            #         val = v2
-            #         cur_type = 'Cr'
-            # else:
-            #     val = int(i) + int(j)
-            #     cur_type = 'Dr'
-            # # val = int(i) + int(j)
+            if type == 'Cr':
+                v2 = int(i)- int(j)
+                if v2 < 0:
+                    val = abs(v2)
+                    cur_type = 'Dr'
+                else:
+                    val = v2
+                    cur_type = 'Cr'
+            else:
+                val = int(i) + int(j)
+                cur_type = 'Dr'
+            val = int(i) + int(j)
 
             ledger = tally_ledger.objects.get(id = ac)
             fixed_curbal = ledger.current_blnc
             fixed_curbal_type = ledger.current_blnc_type
-            ledger.current_blnc = i
-            # # print(ledger.current_blnc)
+            ledger.current_blnc = val
+            print(val)
+            print(type)
+            print(fixed_curbal)
+            print(fixed_curbal_type)
+            print(ledger)
 
-            ledger.current_blnc_type = type
+
+            ledger.current_blnc_type = cur_type
             ledger.save()
 
             
-            return render(request,'journal_pcurbalance_change.html', {'val' : i,'cur_type': type, 'fix_cur':fixed_curbal,'fix_curtype' : fixed_curbal_type, 'ledger' : ledger })
+            return render(request,'journal_pcurbalance_change.html', {'val' :  val,'cur_type': type, 'fix_cur':fixed_curbal,'fix_curtype' : fixed_curbal_type, 'ledger' : ledger })
     
     
 def create_journal_voucher(request):

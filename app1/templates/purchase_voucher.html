@@ -138,7 +138,7 @@
         margin-top: 11px;
         text-align: center;
     }
-    .modal-content{
+    .mod-content{
         position: relative;
         color:rgb(17, 54, 86) ;
         width: 850px;
@@ -274,9 +274,9 @@
                     <th colspan="10" class="text-right mt-0" style="border-bottom: solid 0.5px rgba(255, 255, 255, .2);
                             border-left:none ; color: #000;">                           
                       
-                      <div >{{date1 | date:'d-M-Y'}}</div>
-                      <input type="hidden" name = 'date1' value="{{date1|date:'Y-m-d'}}">
-                      <div>{{date1 | date:'l'}}</div>
+                      <div id="datenew">{{date1 | date:'d-M-Y'}}</div>
+                        <input type="hidden" name = 'date1' id="date1" value="{{date1|date:'Y-m-d'}}">
+                        <div id="daynew">{{date1 | date:'l'}}</div>
                     </th>
                     
                 </tr>
@@ -376,7 +376,7 @@
 
     <div class="modal fade " id="rec_det">
             <div class="modal-dialog modal-lg">
-                <div class="modal-content" style="background-color: #213b52; color:azure; height: auto;">
+                <div class="modal-content mod-content" style="background-color: #213b52; color:azure; height: auto;">
                     <div class="modal-header">
                         <div class="row container m-0 p-2">
                             <div class="col-10 text-center">
@@ -504,7 +504,7 @@
 
         <div class="modal fade " id="party_det">
             <div class="modal-dialog modal-lg">
-                <div class="modal-content" style="background-color: #213b52; color:azure;">
+                <div class="modal-content mod-content" style="background-color: #213b52; color:azure;">
                     <div class="modal-header">
                         <div class="row container m-0 p-1">
                             <div class="col-10 text-center">
@@ -608,7 +608,7 @@
 
         <div class="modal fade " id="godown">
             <div class="modal-dialog modal-lg">
-                <div class="modal-content" style="background-color: #213b52; color:azure;">
+                <div class="modal-content mod-content" style="background-color: #213b52; color:azure;">
                     
                     <div class="modal-header">
                         <div class="row container m-0 p-1">
@@ -727,6 +727,51 @@
 
     
 <script>
+
+    // *----------------------date setting modal from base.html----------------------------------
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const openModalBtn = document.getElementById('openModalBtn');
+        function openModal() {
+            const modal = document.getElementById('dateModal');
+            console.log('Modal:', modal);
+            console.log('yes');
+            modal.style.display = 'block';
+        }
+
+        openModalBtn.addEventListener('click', openModal);
+    });
+
+    function setDate(){
+        const modal = document.getElementById('dateModal');
+        modal.style.display = 'block';
+        const dateObj = new Date(document.getElementById('enterDate').value);
+
+        const year1 = dateObj.getFullYear();
+        const month1 = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const day1 = String(dateObj.getDate()).padStart(2, '0');
+
+        document.getElementById("date1").value= year1 + '-' + month1 + '-' + day1
+
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const monthAbbreviations = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const month = monthAbbreviations[dateObj.getMonth()];
+        const year = dateObj.getFullYear();
+        const formattedDate = day + '-' + month + '-' + year;
+
+        const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const dayOfWeek = daysOfWeek[dateObj.getDay()];
+
+        document.getElementById("datenew").innerHTML = formattedDate;
+        document.getElementById("daynew").innerHTML = dayOfWeek;
+    }
+// *----------------------end of date setting modal from base.html----------------------------------
+
+
+
+/*----------------- create new row----&---change current balance while entering amount------*/
+
 
     function showPartybalance(){
         
