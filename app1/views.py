@@ -16726,13 +16726,64 @@ def journal_vouchers(request):
         
 def journal_pcur_balance_change(request):
 
+    # if 't_id' in request.session:
+    #     if request.session.has_key('t_id'):
+    #         t_id = request.session['t_id']
+    #     else:
+    #         return redirect('/')
+
+    #     comp = Companies.objects.get(id = t_id)
+    #     if request.method=='POST':
+
+    #         ac = request.POST.get('pac')
+    #         i = request.POST.get('curblnc')
+    #         j = request.POST.get('amount')
+    #         type = request.POST.get('curblnct')
+    #         print(ac)
+    #         print(i)
+    #         print(j)
+    #         print(type)
+
+    #         # updated by Nithya
+    #         if type == 'Cr':
+    #             v2 = int(i)- int(j)
+    #             if v2 < 0:
+    #                 val = abs(v2)
+    #                 cur_type = 'Dr'
+    #             else:
+    #                 val = v2
+    #                 cur_type = 'Cr'
+    #         else:
+    #             val = int(i) + int(j)
+    #             cur_type = 'Dr'
+    #         val = int(i) + int(j)
+
+    #         ledger = tally_ledger.objects.get(id = ac)
+    #         fixed_curbal = ledger.current_blnc
+    #         fixed_curbal_type = ledger.current_blnc_type
+    #         ledger.current_blnc = val
+    #         print(val)
+    #         print(type)
+    #         print(fixed_curbal)
+    #         print(fixed_curbal_type)
+    #         print(ledger)
+
+
+    #         ledger.current_blnc_type = cur_type
+    #         ledger.save()
+
+            
+    #         return render(request,'journal_pcurbalance_change.html', {'val' :  val,'cur_type': type, 'fix_cur':fixed_curbal,'fix_curtype' : fixed_curbal_type, 'ledger' : ledger })
+
+
     if 't_id' in request.session:
         if request.session.has_key('t_id'):
             t_id = request.session['t_id']
         else:
             return redirect('/')
-
+        
         comp = Companies.objects.get(id = t_id)
+
         if request.method=='POST':
 
             ac = request.POST.get('pac')
@@ -16756,12 +16807,11 @@ def journal_pcur_balance_change(request):
             else:
                 val = int(i) + int(j)
                 cur_type = 'Dr'
-            val = int(i) + int(j)
 
             ledger = tally_ledger.objects.get(id = ac)
             fixed_curbal = ledger.current_blnc
             fixed_curbal_type = ledger.current_blnc_type
-            ledger.current_blnc = val
+            # ledger.current_blnc = val
             print(val)
             print(type)
             print(fixed_curbal)
@@ -16769,11 +16819,18 @@ def journal_pcur_balance_change(request):
             print(ledger)
 
 
-            ledger.current_blnc_type = cur_type
-            ledger.save()
+            # ledger.current_blnc_type = cur_type
+            # ledger.save()
+            data = {
+                'val': val,
+                'cur_type': type,
+                'fix_cur': fixed_curbal,
+                'fix_curtype': fixed_curbal_type,
+                'ledger': str(ledger)
+            }
 
-            
-            return render(request,'journal_pcurbalance_change.html', {'val' :  val,'cur_type': type, 'fix_cur':fixed_curbal,'fix_curtype' : fixed_curbal_type, 'ledger' : ledger })
+            return JsonResponse(data, safe=False)
+
     
     
 def create_journal_voucher(request):
