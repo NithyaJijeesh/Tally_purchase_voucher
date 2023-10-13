@@ -367,12 +367,11 @@
                 data: {
                     'id': parid,
                     csrfmiddlewaretoken: '{{ csrf_token }}'
-
-
             },
 
             success: function (data) {
 
+            
                 if (data[0].current_blnc_type == 'Dr') {
 
                     curData1 = '<input id ="pled'+ids +'" +  class= "txt" readonly value = ' + data[0].current_blnc + ' name = pled[]> <input id ="pledt'+ids +'" name = pledt[] class= "txt" readonly value = ' + data[0].current_blnc_type + '> <input id ="fixed_pled'+ids +'"  class= "txt" readonly value = ' + data[0].current_blnc + '> <input id ="fixed_pledt'+ids +'" class= "txt" readonly value = ' + data[0].current_blnc_type + '>';
@@ -408,7 +407,6 @@
 
 
     function createRow() {
-        // var crid = $(".butn").length+1;
         const crid  = $(".payacc").length +1;
         var did = $(".debit_amnt").length+1;
         var cid = $(".credit_amnt").length +1;
@@ -661,6 +659,43 @@
         }
         $('#credit_total').val(sum);
     }
+
+
+
+
+
+
+
+
+
+    function createRow(rowId) {
+            const prevRowId = rowId - 1;
+            const drCrOpt = $(`#dr_cr_opt${rowId}`).val();
+            const prevDrCrOpt = $(`#dr_cr_opt${prevRowId}`).val();
+
+            if (drCrOpt !== prevDrCrOpt) {
+                alert('Creating a new row because options differ.');
+                // Add your code here to create a new row
+            } else if (rowId > 1) {
+                createRow(prevRowId); // Recursively check the row above
+            }
+        }
+
+        // Function to calculate the debit total
+        function calculateTotalDebit() {
+            // Your code to calculate the debit total
+        }
+
+
+
+
+
+
+
+
+
+
+
 
 </script>
 
