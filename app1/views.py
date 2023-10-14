@@ -16790,10 +16790,10 @@ def journal_pcur_balance_change(request):
             i = request.POST.get('curblnc')
             j = request.POST.get('amount')
             type = request.POST.get('curblnct')
-            print(ac)
-            print(i)
-            print(j)
-            print(type)
+            # print(ac)
+            # print(i)
+            # print(j)
+            # print(type)
 
             # updated by Nithya
             if type == 'Cr':
@@ -16812,18 +16812,18 @@ def journal_pcur_balance_change(request):
             fixed_curbal = ledger.current_blnc
             fixed_curbal_type = ledger.current_blnc_type
             # ledger.current_blnc = val
-            print(val)
-            print(type)
-            print(fixed_curbal)
-            print(fixed_curbal_type)
-            print(ledger)
+            # print(val)
+            # print(type)
+            # print(fixed_curbal)
+            # print(fixed_curbal_type)
+            # print(ledger)
 
 
             # ledger.current_blnc_type = cur_type
             # ledger.save()
             data = {
                 'val': val,
-                'cur_type': type,
+                'cur_type': cur_type,
                 'fix_cur': fixed_curbal,
                 'fix_curtype': fixed_curbal_type,
                 'ledger': str(ledger)
