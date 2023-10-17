@@ -13677,13 +13677,6 @@ def list_payment_voucher(request):
         tally = Companies.objects.filter(id=t_id)
         comp = Companies.objects.get(id = t_id)
         ledger = tally_ledger.objects.filter(company_id = comp)
-        # for i in range(len(ledger)):
-            
-        #     if ledger[i].current_blnc is None:
-        #         ledger[i].current_blnc = ledger[i].opening_blnc
-        #         ledger[i].current_blnc_type = ledger[i].opening_blnc_type
-
-        #         ledger[i].save()
         
         voucher = Voucher.objects.filter(voucher_type = 'Payment',company = comp)
         context = {
@@ -13792,14 +13785,6 @@ def list_receipt_voucher(request):
         tally = Companies.objects.filter(id=t_id)
         comp = Companies.objects.get(id = t_id)
         ledger = tally_ledger.objects.filter(company_id = comp)
-        # for i in range(len(ledger)):
-        #     #print(ledger[i])
-            
-        #     if ledger[i].current_blnc is None:
-        #         ledger[i].current_blnc = ledger[i].opening_blnc
-        #         ledger[i].current_blnc_type = ledger[i].opening_blnc_type
-
-        #         ledger[i].save()
 
         voucher = Voucher.objects.filter(voucher_type = 'Receipt',company = comp)
         context = {
@@ -16726,55 +16711,6 @@ def journal_vouchers(request):
         
 def journal_pcur_balance_change(request):
 
-    # if 't_id' in request.session:
-    #     if request.session.has_key('t_id'):
-    #         t_id = request.session['t_id']
-    #     else:
-    #         return redirect('/')
-
-    #     comp = Companies.objects.get(id = t_id)
-    #     if request.method=='POST':
-
-    #         ac = request.POST.get('pac')
-    #         i = request.POST.get('curblnc')
-    #         j = request.POST.get('amount')
-    #         type = request.POST.get('curblnct')
-    #         print(ac)
-    #         print(i)
-    #         print(j)
-    #         print(type)
-
-    #         # updated by Nithya
-    #         if type == 'Cr':
-    #             v2 = int(i)- int(j)
-    #             if v2 < 0:
-    #                 val = abs(v2)
-    #                 cur_type = 'Dr'
-    #             else:
-    #                 val = v2
-    #                 cur_type = 'Cr'
-    #         else:
-    #             val = int(i) + int(j)
-    #             cur_type = 'Dr'
-    #         val = int(i) + int(j)
-
-    #         ledger = tally_ledger.objects.get(id = ac)
-    #         fixed_curbal = ledger.current_blnc
-    #         fixed_curbal_type = ledger.current_blnc_type
-    #         ledger.current_blnc = val
-    #         print(val)
-    #         print(type)
-    #         print(fixed_curbal)
-    #         print(fixed_curbal_type)
-    #         print(ledger)
-
-
-    #         ledger.current_blnc_type = cur_type
-    #         ledger.save()
-
-            
-    #         return render(request,'journal_pcurbalance_change.html', {'val' :  val,'cur_type': type, 'fix_cur':fixed_curbal,'fix_curtype' : fixed_curbal_type, 'ledger' : ledger })
-
 
     if 't_id' in request.session:
         if request.session.has_key('t_id'):
@@ -16790,10 +16726,6 @@ def journal_pcur_balance_change(request):
             i = request.POST.get('curblnc')
             j = request.POST.get('amount')
             type = request.POST.get('curblnct')
-            # print(ac)
-            # print(i)
-            # print(j)
-            # print(type)
 
             # updated by Nithya
             if type == 'Cr':
@@ -16809,18 +16741,9 @@ def journal_pcur_balance_change(request):
                 cur_type = 'Dr'
 
             ledger = tally_ledger.objects.get(id = ac)
-            fixed_curbal = ledger.current_blnc
-            fixed_curbal_type = ledger.current_blnc_type
-            # ledger.current_blnc = val
-            # print(val)
-            # print(type)
-            # print(fixed_curbal)
-            # print(fixed_curbal_type)
-            # print(ledger)
+            fixed_curbal = i
+            fixed_curbal_type = type
 
-
-            # ledger.current_blnc_type = cur_type
-            # ledger.save()
             data = {
                 'val': val,
                 'cur_type': cur_type,
@@ -16861,9 +16784,6 @@ def create_journal_voucher(request):
             part_ledg_type = request.POST.getlist("pledt[]")         
             debits =request.POST.getlist("debit_amnt[]")
             credits = 0 if request.POST.getlist("credit_amnt[]") is None else request.POST.getlist("credit_amnt[]")
-            # print(particulars_id)
-            # print(part_ledg)
-            # print(part_ledg_type)
             vouch = Voucher.objects.get(company = comp,voucher_type = 'Journal',voucher_name = name)
             
             if debit == credit:
@@ -16877,20 +16797,16 @@ def create_journal_voucher(request):
 
                 j_vouch=journal_voucher.objects.filter(company = comp).last()
                 
-                # print(particulars_id)
                 particulars = []
                 for i in particulars_id:
                     id = tally_ledger.objects.get(id = i)
                     particulars.append(id.name)
 
-                # if len(particulars_id)==(len(debits)+len(credits) ) and particulars_id and debits and credits:
                 if len(particulars_id)==len(particulars) and particulars_id and particulars:
 
                     particular=zip(particulars,particulars_id,debits,credits,part_ledg,part_ledg_type)
                     mapped=list(particular)
-                    # print(mapped)
                     for m in mapped:
-                        # print(m)
                         ta_ledge = tally_ledger.objects.get(id = m[1],company = comp)
                         ta_ledge.current_blnc = m[4]
                         ta_ledge.current_blnc_type = m[5]
