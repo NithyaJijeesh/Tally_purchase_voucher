@@ -14176,7 +14176,7 @@ def credit_notess(request):
     #Nithya change
     name = request.POST.get('ptype')
 
-    ldg=tally_ledger.objects.filter(company=cmp1,under__in=["Bank_Accounts" , "Cash_in_Hand" , "Sundry_Debtors" , "Sundry_Creditors" , "Branch_Divisions"])
+    ldg=tally_ledger.objects.filter(company=cmp1,under__in=["Bank_Accounts" , "Cash_in_Hand" , "Sundry_Debtors" , "Sundry_Creditors", "Branch_Divisions"])
     tally = Companies.objects.filter(id=t_id)
     ldg1=tally_ledger.objects.filter(company=cmp1,under="Sales_Account")
     item = stock_itemcreation.objects.filter(company = cmp1)
@@ -14356,8 +14356,10 @@ def create_credit(request):
             pdebit.save()
    
             ldg1=tally_ledger.objects.get(company=cmp1,name=pdebit.customer)
+
             cr_bal=float(ldg1.opening_blnc)+float(pdebit.grandtotal)
             dr_bal=float(pdebit.grandtotal)-float(ldg1.opening_blnc)
+            
             if ldg1.opening_blnc_type=="Cr":
                 ldg1.opening_blnc=cr_bal
                 
@@ -14900,7 +14902,7 @@ def debits_note(request):
     name = request.POST.get('ptype')
    
     
-    ldg=tally_ledger.objects.filter(company=cmp1,under__in=["Bank_Accounts" , "Cash_in_Hand" , "Sundry_Debtors" , "Sundry_Creditors" , "Branch_Divisions"])
+    ldg=tally_ledger.objects.filter(company=cmp1,under__in=["Bank Accounts" , "Cash_in_Hand" , "Sundry_Debtors" , "Sundry_Creditors" , "Branch_Divisions"])
     tally = Companies.objects.filter(id=t_id)
     ldg1=tally_ledger.objects.filter(company=cmp1,under="Purchase Accounts")
     item = stock_itemcreation.objects.filter(company = cmp1)
@@ -18671,7 +18673,7 @@ def create_purchase_voucher(request):
             feilds=zip(items,item_id,qnty,rate,per,amounts)
 
             mapped=list(feilds)
-            print(mapped)
+            # print(mapped)
             for m in mapped:
                 purchase_particulars.objects.get_or_create( item =m[0],     
                                                             item_id =m[1], 
