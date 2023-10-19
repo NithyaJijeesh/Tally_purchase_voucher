@@ -728,6 +728,12 @@
     
 <script>
 
+    $(document).ready(function(){
+        var ladDateInput = document.getElementById("inv_date");
+        var currentDate = new Date().toISOString().slice(0, 10);
+        ladDateInput.value = currentDate;
+    });
+
     // *----------------------date setting modal from base.html----------------------------------
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -798,6 +804,9 @@
        
         if (selectedOption) {
             $('#rec_det').modal('show');
+            var ladDateInput = document.getElementById("lad_date");
+            var currentDate = new Date().toISOString().slice(0, 10);
+            ladDateInput.value = currentDate;
         }
     
     }

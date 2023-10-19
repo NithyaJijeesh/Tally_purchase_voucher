@@ -15864,6 +15864,11 @@ def contra_vouchers(request):
         ledg_grp = tally_ledger.objects.filter(under__in = ['Bank_Accounts','Cash_in_Hand'],company_id=cmp)
 
         v=contra_voucher.objects.aggregate(Max('cid'))
+
+        field_names = contra_voucher._meta.get_fields()
+        field_names_list = [field.name for field in field_names]
+        print(field_names_list) 
+
         tally = Companies.objects.filter(id=t_id)
         counter = 1 if v['cid__max'] is None else int(v['cid__max']) + 1
         context = {
@@ -15905,6 +15910,7 @@ def create_contra_voucher(request):
             particulars_id = request.POST.getlist("accid[]")
             amounts = request.POST.getlist("amnt[]")
 
+        
         contra_voucher(cid = cid,account = acc,date = date1 , amount = amount , narration = nrt ,voucher = vouch,company = comp).save()
         # sumayya----voucher numbering---
         voucher = Voucher.objects.get(company = comp,voucher_type = 'Contra',voucher_name = name)
@@ -18591,46 +18597,6 @@ def create_purchase_voucher(request):
 
         if request.method == 'POST':
 
-            # modal receipt deatils
-            receipt_no = []
-            receipt_dates = []
-
-            modal_data_receipt = request.POST.get('modal_data_receipt')
-            modal_data = json.loads(modal_data_receipt)
-
-            receipt_docno = modal_data.get('recdocno')
-            dispatch = modal_data.get('dispch')
-            destination = modal_data.get('destn')
-            carrier = modal_data.get('carrier')
-            bill_of_lading = modal_data.get('bill_lading')
-            lading_date = modal_data.get('lad_date')
-            vehicle_no = modal_data.get('veh_num')
-            
-            # modal receipt numbers deatils
-            modal_data_recnote = request.POST.get('modal_data_receiptnotes')
-            modal_data_array = json.loads(modal_data_recnote)
-
-            for row_data in modal_data_array:
-                recno = row_data.get('recno')
-                recdate = row_data.get('recdate')
-
-                receipt_no.append(recno)
-                receipt_dates.append(recdate)
-
-
-            # part details modal data
-            modal_data_party = request.POST.get('modal_data_party')
-            modal_party = json.loads(modal_data_party)
-
-            supplier = modal_party.get('supplier')
-            mailing_name = modal_party.get('mailing_name')
-            address = modal_party.get('address')
-            state = modal_party.get('state')
-            country = modal_party.get('country')
-            gst_type = modal_party.get('gst_type')
-            gst_num =  modal_party.get('gst_num')
-
-
             purchase_voucher_id = request.POST.get('idlbl')
             supplier_invoice_num = request.POST.get('sup_invno')
             supplier_invoice_date = request.POST.get('inv_date')
@@ -18649,19 +18615,50 @@ def create_purchase_voucher(request):
             amounts = request.POST.getlist("amnt[]")
 
             
-        purchase_voucher(company = comp, pur_id = purchase_voucher_id,sup_inv_no = supplier_invoice_num,sup_inv_date = supplier_invoice_date,
+        purchase_voucher(pur_id = purchase_voucher_id,sup_inv_no = supplier_invoice_num,sup_inv_date = supplier_invoice_date,
                          vouch_date = voucher_date,party_accname = party_account,purchase_ledger = purchase_ledger, 
-                         amount = amount ,quantity = quantity,narration = narration ,voucher = vouch, 
+                         amount = amount ,quantity = quantity,narration = narration , company = comp, voucher = vouch).save()
                          
-                         receipt_doc_no = receipt_docno, dispatched_through = dispatch, destination = destination,carriername_agent = carrier, 
-                         bill_of_lading  = bill_of_lading,receipt_date = lading_date,motor_vehicle_no = vehicle_no,
 
-                         supplier = supplier, mailing_name = mailing_name, address =  address,state = state,country = country,
-                         gst_treatment = gst_type, gst_number = gst_num).save()
+                        #  supplier = supplier, mailing_name = mailing_name, address =  address,state = state,country = country,
+                        #  gst_treatment = gst_type, gst_number = gst_num).save()
  
-
-
         purch_vouch= purchase_voucher.objects.filter(company = comp).last()
+
+        # modal receipt deatils
+        receipt_no = []
+        receipt_dates = []
+
+        modal_data_receipt = request.POST.get('modal_data_receipt')
+        if modal_data_receipt:
+            modal_data = json.loads(modal_data_receipt)
+
+            purch_vouch.receipt_doc_no= modal_data.get('recdocno')
+            purch_vouch.dispatched_through= modal_data.get('dispch')
+            purch_vouch.destination = modal_data.get('destn')
+            purch_vouch.carriername_agent = modal_data.get('carrier')
+            purch_vouch.bill_of_lading = modal_data.get('bill_lading')
+            purch_vouch.receipt_date = modal_data.get('lad_date')
+            purch_vouch.motor_vehicle_no = modal_data.get('veh_num')
+
+            purch_vouch.save()
+
+
+        # part details modal data
+        modal_data_party = request.POST.get('modal_data_party')
+        if modal_data_party:
+            modal_party = json.loads(modal_data_party)
+
+            purch_vouch.supplier = modal_party.get('supplier')
+            purch_vouch.mailing_name = modal_party.get('mailing_name')
+            purch_vouch.address = modal_party.get('address')
+            purch_vouch.state = modal_party.get('state')
+            purch_vouch.country = modal_party.get('country')
+            purch_vouch.gst_treatment = modal_party.get('gst_type')
+            purch_vouch.gst_number =  modal_party.get('gst_num')
+
+            purch_vouch.save()
+
         
         items = []
         for i in item_id:
@@ -18684,14 +18681,32 @@ def create_purchase_voucher(request):
                                                             purchase_voucher = purch_vouch,
                                                             company = comp)
 
-        if len(receipt_no)==len(receipt_dates) and  receipt_no and receipt_dates:
+        # modal receipt numbers deatils
+        modal_data_recnote = request.POST.get('modal_data_receiptnotes')
+        print(modal_data_recnote)
+        if modal_data_recnote:
+            print('yes')
+            modal_data_array = json.loads(modal_data_recnote)
 
-            rec_feilds=zip(receipt_no,receipt_dates)
-            mapped=list(rec_feilds)
+            non_empty_data = [data for data in modal_data_array if any(data)]
+            if non_empty_data:
+                for row_data in modal_data_array:
+                    recno = row_data.get('recno')
+                    recdate = row_data.get('recdate')
 
-            for i in mapped:
-                receipt_note_no.objects.get_or_create(purchase = purch_vouch,note_no = i[0], date= i[1])
-            # print(mapped)
+                    receipt_no.append(recno)
+                    receipt_dates.append(recdate)
+
+                if len(receipt_no)==len(receipt_dates) and  receipt_no and receipt_dates:
+
+                    rec_feilds=zip(receipt_no,receipt_dates)
+                    mapped=list(rec_feilds)
+                    print(mapped)
+                    
+                    for i in mapped:
+                        receipt_note_no.objects.get_or_create(purchase = purch_vouch,note_no = i[0], date= i[1])
+                    print(mapped)
+            
         
     return redirect('/list_purchase_voucher')
 
