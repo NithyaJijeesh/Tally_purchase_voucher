@@ -13704,7 +13704,24 @@ def payment_vouchers(request):
         ledg_grp = tally_ledger.objects.filter(company = comp,under__in = ['Bank_Accounts','Cash_in_Hand'])
 
      
-        v  = 1 if payment_voucher.objects.filter(company = comp).values('pid').last() is None else payment_voucher.objects.filter(company = comp).values('pid').last()['pid']+1
+        # v  = 1 if payment_voucher.objects.filter(company = comp).values('pid').last() is None else payment_voucher.objects.filter(company = comp).values('pid').last()['pid']+1
+
+        count_pay_voucher = purchase_voucher.objects.filter(company=comp).count()
+
+        if count_pay_voucher == 0:
+            v = 1
+        else:
+            last_payment_voucher = payment_voucher.objects.filter(company=comp).values('pid').last()
+            
+            if last_payment_voucher is not None and last_payment_voucher['pid'] is not None:
+                v = last_payment_voucher['pid'] + 1
+            else:
+                records_above = payment_voucher.objects.filter(company=comp, pid__isnull=False).values()
+                
+                if records_above.exists():
+                    v = records_above.earliest('pid')['pid'] + 1
+                else:
+                    v = 1
         
         tally = Companies.objects.filter(id=t_id)
         context = {
@@ -13812,7 +13829,24 @@ def receipt_vouchers(request):
         ledg_grp_all = tally_ledger.objects.filter(company = comp)
         ledg_grp = tally_ledger.objects.filter(company = comp,under__in = ['Bank_Accounts','Cash_in_Hand'])
       
-        v  = 1 if receipt_voucher.objects.filter(company = comp).values('rid').last() is None else receipt_voucher.objects.filter(company = comp).values('rid').last()['rid']+1
+        # v  = 1 if receipt_voucher.objects.filter(company = comp).values('rid').last() is None else receipt_voucher.objects.filter(company = comp).values('rid').last()['rid']+1
+
+        count_rec_voucher = receipt_voucher.objects.filter(company=comp).count()
+
+        if count_rec_voucher == 0:
+            v = 1
+        else:
+            last_rec_voucher = receipt_voucher.objects.filter(company=comp).values('rid').last()
+            
+            if last_rec_voucher is not None and last_rec_voucher['rid'] is not None:
+                v = last_rec_voucher['rid'] + 1
+            else:
+                records_above = receipt_voucher.objects.filter(company=comp, rid__isnull=False).values()
+                
+                if records_above.exists():
+                    v = records_above.earliest('rid')['rid'] + 1
+                else:
+                    v = 1
 
         tally = Companies.objects.filter(id=t_id)
         context = {
@@ -15863,21 +15897,36 @@ def contra_vouchers(request):
         
         ledg_grp = tally_ledger.objects.filter(under__in = ['Bank_Accounts','Cash_in_Hand'],company_id=cmp)
 
-        v=contra_voucher.objects.aggregate(Max('cid'))
+        # v=contra_voucher.objects.aggregate(Max('cid'))
 
-        field_names = contra_voucher._meta.get_fields()
-        field_names_list = [field.name for field in field_names]
-        print(field_names_list) 
+        count_contra_voucher = contra_voucher.objects.filter(company=cmp).count()
+
+        if count_contra_voucher == 0:
+            v = 1
+        else:
+            last_contra_voucher = contra_voucher.objects.filter(company=cmp).values('cid').last()
+            
+            if last_contra_voucher is not None and last_contra_voucher['cid'] is not None:
+                v = last_contra_voucher['cid'] + 1
+            else:
+                records_above = contra_voucher.objects.filter(company=cmp, cid__isnull=False).values()
+                
+                if records_above.exists():
+                    v = records_above.earliest('cid')['cid'] + 1
+                else:
+                    v = 1
+
 
         tally = Companies.objects.filter(id=t_id)
-        counter = 1 if v['cid__max'] is None else int(v['cid__max']) + 1
+        # counter = 1 if v['cid__max'] is None else int(v['cid__max']) + 1
+        
         context = {
                     'company' : cmp ,
                     'vouch' : vouch,
                     'date1' : date.today(),
                     'name':name,
                     'ledg' : ledg_grp,
-                    'v' : counter,
+                    'v' : v,
                     'tally':tally
                 }
         return render(request,'contra_voucher.html',context)
@@ -16700,9 +16749,27 @@ def journal_vouchers(request):
         #for i in range(1,len(ledg_grp_all)):
 
      
-        v  = journal_voucher.objects.values('jid').filter(company = comp,jname = name).last() 
+        # v  = journal_voucher.objects.values('jid').filter(company = comp,jname = name).last() 
         
-        counter = 1 if v is None else int(v['jid']) + 1
+        # counter = 1 if v is None else int(v['jid']) + 1
+
+        count_journal_voucher = journal_voucher.objects.filter(company=comp).count()
+
+        if count_journal_voucher == 0:
+            v = 1
+        else:
+            last_journal_voucher = journal_voucher.objects.filter(company=comp).values('jid').last()
+            
+            if last_journal_voucher is not None and last_journal_voucher['jid'] is not None:
+                v = last_journal_voucher['jid'] + 1
+            else:
+                records_above = journal_voucher.objects.filter(company=comp, jid__isnull=False).values()
+                
+                if records_above.exists():
+                    v = records_above.earliest('jid')['jid'] + 1
+                else:
+                    v = 1
+
 
         
         context = {
@@ -16712,7 +16779,7 @@ def journal_vouchers(request):
                     'name':name,
                     'ledg' : ledg_grp,
                     'ledg_all' : ledg_grp_all,
-                    'v' : counter,
+                    'v' : v,
                     'tally':tally
                 }
         return render(request,'journal_voucher.html',context)
@@ -18566,8 +18633,24 @@ def purchase_vouchers(request):
         godown = CreateGodown.objects.filter(comp = comp)
 
      
-        v  = 1 if purchase_voucher.objects.filter(company = comp).values('pur_id').last() is None else purchase_voucher.objects.filter(company = comp).values('pur_id').last()['pur_id']+1
-        
+        # v  = 1 if purchase_voucher.objects.filter(company = comp).values('pur_id').last() is None else purchase_voucher.objects.filter(company = comp).values('pur_id').last()['pur_id']+1
+        count_purch_voucher = purchase_voucher.objects.filter(company=comp).count()
+
+        if count_purch_voucher == 0:
+            v = 1
+        else:
+            last_purchase_voucher = purchase_voucher.objects.filter(company=comp).values('pur_id').last()
+            
+            if last_purchase_voucher is not None and last_purchase_voucher['pur_id'] is not None:
+                v = last_purchase_voucher['pur_id'] + 1
+            else:
+                records_above = purchase_voucher.objects.filter(company=comp, pur_id__isnull=False).values()
+                
+                if records_above.exists():
+                    v = records_above.earliest('pur_id')['pur_id'] + 1
+                else:
+                    v = 1
+
         tally = Companies.objects.filter(id=t_id)
         context = {
                     'company' : comp ,
@@ -18602,7 +18685,9 @@ def create_purchase_voucher(request):
             supplier_invoice_date = request.POST.get('inv_date')
             voucher_date = request.POST.get('date1')
             party_account = request.POST.get('partyacc')
+            party_account = tally_ledger.objects.filter(company = comp).get(id = party_account).name
             purchase_ledger = request.POST.get('purchacc')
+            purchase_ledger = tally_ledger.objects.filter(company = comp).get(id = purchase_ledger).name
 
             amount = request.POST.get('total')
             quantity = request.POST.get('quantity')
@@ -18670,7 +18755,6 @@ def create_purchase_voucher(request):
             feilds=zip(items,item_id,qnty,rate,per,amounts)
 
             mapped=list(feilds)
-            # print(mapped)
             for m in mapped:
                 purchase_particulars.objects.get_or_create( item =m[0],     
                                                             item_id =m[1], 
@@ -18683,29 +18767,27 @@ def create_purchase_voucher(request):
 
         # modal receipt numbers deatils
         modal_data_recnote = request.POST.get('modal_data_receiptnotes')
-        print(modal_data_recnote)
+
         if modal_data_recnote:
-            print('yes')
             modal_data_array = json.loads(modal_data_recnote)
+            for row_data in modal_data_array:
+                recno = row_data.get('recno')
+                recdate = row_data.get('recdate')
 
-            non_empty_data = [data for data in modal_data_array if any(data)]
-            if non_empty_data:
-                for row_data in modal_data_array:
-                    recno = row_data.get('recno')
-                    recdate = row_data.get('recdate')
-
+                try:
+                    recdate = datetime.strptime(recdate, '%Y-%m-%d').date()
                     receipt_no.append(recno)
                     receipt_dates.append(recdate)
+                except ValueError:
+                    pass
 
-                if len(receipt_no)==len(receipt_dates) and  receipt_no and receipt_dates:
+            if len(receipt_no)==len(receipt_dates) and  receipt_no and receipt_dates:
 
-                    rec_feilds=zip(receipt_no,receipt_dates)
-                    mapped=list(rec_feilds)
-                    print(mapped)
-                    
-                    for i in mapped:
-                        receipt_note_no.objects.get_or_create(purchase = purch_vouch,note_no = i[0], date= i[1])
-                    print(mapped)
+                rec_feilds=zip(receipt_no,receipt_dates)
+                mapped=list(rec_feilds)
+                print(mapped)
+                for i in mapped:
+                    receipt_note_no.objects.get_or_create(purchase = purch_vouch,note_no = i[0], date= i[1])
             
         
     return redirect('/list_purchase_voucher')
@@ -18760,10 +18842,8 @@ def purchase_godown(request):
                     existing_record.quantity = str(int(existing_record.quantity) + int(gdqty_data[i]))
                     existing_record.value = str(int(existing_record.value) + int(gdamnt_data[i]))
                     existing_record.save()
-                    print('yes')
 
                 except Godown_Items.DoesNotExist:
-                    print('no')
                     godown_items = Godown_Items(
                         comp=comp,
                         item=item_name,
